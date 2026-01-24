@@ -1,0 +1,15 @@
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/bin/Debug/net10.0/ContrateJa.Application.deps.json
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/bin/Debug/net10.0/ContrateJa.Application.dll
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/bin/Debug/net10.0/ContrateJa.Application.pdb
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/bin/Debug/net10.0/ContrateJa.Domain.dll
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/bin/Debug/net10.0/ContrateJa.Domain.pdb
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/ContrateJa.Application.csproj.AssemblyReference.cache
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/ContrateJa.Application.GeneratedMSBuildEditorConfig.editorconfig
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/ContrateJa.Application.AssemblyInfoInputs.cache
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/ContrateJa.Application.AssemblyInfo.cs
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/ContrateJa.Application.csproj.CoreCompileInputs.cache
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/Contrate.B09C2048.Up2Date
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/ContrateJa.Application.dll
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/refint/ContrateJa.Application.dll
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/ContrateJa.Application.pdb
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/ref/ContrateJa.Application.dll

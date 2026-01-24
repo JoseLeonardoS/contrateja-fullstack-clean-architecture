@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "ContrateJa.Domain/1.0.0": {
+        "runtime": {
+          "ContrateJa.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ContrateJa.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

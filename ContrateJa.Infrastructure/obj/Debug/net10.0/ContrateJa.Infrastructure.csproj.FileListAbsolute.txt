@@ -1,0 +1,15 @@
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/bin/Debug/net10.0/ContrateJa.Infrastructure.deps.json
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/bin/Debug/net10.0/ContrateJa.Infrastructure.dll
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/bin/Debug/net10.0/ContrateJa.Infrastructure.pdb
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/bin/Debug/net10.0/ContrateJa.Domain.dll
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/bin/Debug/net10.0/ContrateJa.Domain.pdb
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/ContrateJa.Infrastructure.csproj.AssemblyReference.cache
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/ContrateJa.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/ContrateJa.Infrastructure.AssemblyInfoInputs.cache
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/ContrateJa.Infrastructure.AssemblyInfo.cs
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/ContrateJa.Infrastructure.csproj.CoreCompileInputs.cache
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/Contrate.40F09956.Up2Date
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/ContrateJa.Infrastructure.dll
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/refint/ContrateJa.Infrastructure.dll
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/ContrateJa.Infrastructure.pdb
+/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/ref/ContrateJa.Infrastructure.dll

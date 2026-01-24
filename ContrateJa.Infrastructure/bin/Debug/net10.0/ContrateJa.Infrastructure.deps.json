@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "ContrateJa.Infrastructure/1.0.0": {
+        "dependencies": {
+          "ContrateJa.Domain": "1.0.0"
+        },
+        "runtime": {
+          "ContrateJa.Infrastructure.dll": {}
+        }
+      },
+      "ContrateJa.Domain/1.0.0": {
+        "runtime": {
+          "ContrateJa.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ContrateJa.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ContrateJa.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

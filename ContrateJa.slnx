@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="ContrateJa.API/ContrateJa.API.csproj" />
+  <Project Path="ContrateJa.Application/ContrateJa.Application.csproj" />
+  <Project Path="ContrateJa.Domain/ContrateJa.Domain.csproj" />
+  <Project Path="ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj" />
+  <Project Path="ContrateJa.Tests/ContrateJa.Tests.csproj" />
+</Solution>
