@@ -1,22 +1,30 @@
 namespace ContrateJa.Domain.Entities
 {
-  public class Proposal
+  public sealed class Proposal
   {
-    public int Id { get; set; }
-    public int JobId { get; set; }
-    public int FreelancerId { get; set; }
-    public decimal Amount { get; set; }
-    public string CoverLetter { get; set; }
-    public string Status { get; set; }
-    public DateTime SubmittedAt { get; set; }
+    public long Id { get; private set; }
+    public long JobId { get; private set; }
+    public long FreelancerId { get; private set; }
+    public decimal Amount { get; private set; }
+    public string CoverLetter { get; private set; }
+    public string Status { get; private set; }
+    public DateTime SubmittedAt { get; private set; }
 
-    public Proposal(int jobId, int freelancerId, decimal amount, string coverLetter, string status)
+    private Proposal() { }
+
+    private Proposal(int jobId, int freelancerId, decimal amount, string coverLetter, string status)
     {
       JobId = jobId;
       FreelancerId = freelancerId;
       Amount = amount;
       CoverLetter = coverLetter;
       Status = status;
+      SubmittedAt = DateTime.UtcNow;
+    }
+
+    public static void CreateProposal(long jobId, long freelancerId, decimal amount, string coverLetter, string satatus)
+    {
+      // TODO: Refinar código de proposal e  criar VOs necessários.
     }
   }
 }

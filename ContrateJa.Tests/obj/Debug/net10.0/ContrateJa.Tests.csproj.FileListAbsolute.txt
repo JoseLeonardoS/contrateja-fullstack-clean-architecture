@@ -101,3 +101,5 @@
 /home/jose/dev/backend/ContrateJa/ContrateJa.Tests/obj/Debug/net10.0/ContrateJa.Tests.pdb
 /home/jose/dev/backend/ContrateJa/ContrateJa.Tests/obj/Debug/net10.0/ContrateJa.Tests.genruntimeconfig.cache
 /home/jose/dev/backend/ContrateJa/ContrateJa.Tests/obj/Debug/net10.0/ref/ContrateJa.Tests.dll
+/home/jose/dev/backend/ContrateJa/ContrateJa.Tests/bin/Debug/net10.0/BCrypt.Net-Next.dll
+/home/jose/dev/backend/ContrateJa/ContrateJa.Tests/obj/Debug/net10.0/ContrateJa.Tests.sourcelink.json

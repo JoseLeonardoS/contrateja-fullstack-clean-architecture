@@ -16,7 +16,7 @@ namespace ContrateJa.Domain.ValueObjects
       if (name.Length < 3 || name.Length > 150)
         throw new ArgumentException("Invalid street name.");
 
-      if (!Regex.IsMatch(name, @"^[A-Za-zÀ-ÖØ-öø-ÿ0-9]+([ '.\-][A-Za-zÀ-ÖØ-öø-ÿ0-9]+)*$"))
+      if (!Regex.IsMatch(name, @"^[A-Za-zÀ-ÖØ-öø-ÿ0-9]+([ '.\-]+[A-Za-zÀ-ÖØ-öø-ÿ0-9]+)*$"))
         throw new ArgumentException("Invalid street name.");
 
       Name = name;

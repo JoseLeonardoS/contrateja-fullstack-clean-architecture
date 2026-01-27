@@ -9,3 +9,5 @@
 /home/jose/dev/backend/ContrateJa/ContrateJa.Domain/obj/Debug/net10.0/refint/ContrateJa.Domain.dll
 /home/jose/dev/backend/ContrateJa/ContrateJa.Domain/obj/Debug/net10.0/ContrateJa.Domain.pdb
 /home/jose/dev/backend/ContrateJa/ContrateJa.Domain/obj/Debug/net10.0/ref/ContrateJa.Domain.dll
+/home/jose/dev/backend/ContrateJa/ContrateJa.Domain/obj/Debug/net10.0/ContrateJa.Domain.csproj.AssemblyReference.cache
+/home/jose/dev/backend/ContrateJa/ContrateJa.Domain/obj/Debug/net10.0/ContrateJa.Domain.sourcelink.json

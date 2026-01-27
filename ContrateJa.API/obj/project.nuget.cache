@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "xhCY8K8UdiI=",
+  "dgSpecHash": "Ap2ZriYsit4=",
   "success": true,
   "projectFilePath": "/home/jose/dev/backend/ContrateJa/ContrateJa.API/ContrateJa.API.csproj",
   "expectedPackageFiles": [
+    "/home/jose/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/jose/.nuget/packages/microsoft.aspnetcore.openapi/10.0.0/microsoft.aspnetcore.openapi.10.0.0.nupkg.sha512",
     "/home/jose/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512"
   ],

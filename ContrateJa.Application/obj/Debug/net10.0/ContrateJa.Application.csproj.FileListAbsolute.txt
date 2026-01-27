@@ -13,3 +13,4 @@
 /home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/refint/ContrateJa.Application.dll
 /home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/ContrateJa.Application.pdb
 /home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/ref/ContrateJa.Application.dll
+/home/jose/dev/backend/ContrateJa/ContrateJa.Application/obj/Debug/net10.0/ContrateJa.Application.sourcelink.json
