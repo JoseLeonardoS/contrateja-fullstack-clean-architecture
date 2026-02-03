@@ -2,9 +2,9 @@ namespace ContrateJa.Domain.Enums
 {
   public enum EAccountType
   {
-    contractor,
-    freelancer,
-    both,
-    admin
+    Contractor,
+    Freelancer,
+    Both,
+    Admin
   }
 }

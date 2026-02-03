@@ -7,7 +7,7 @@ namespace ContrateJa.Tests.Domain.Entities
   public sealed class UserTests
   {
     private static User CreateUser(
-      EAccountType accountType = EAccountType.freelancer,
+      EAccountType accountType = EAccountType.Freelancer,
       bool isAvailable = false,
       Name? name = null,
       Phone? phone = null,
@@ -84,15 +84,15 @@ namespace ContrateJa.Tests.Domain.Entities
 
       Action act = paramName switch
       {
-        "name" => () => User.Create(null!, phone, email, passwordHash, EAccountType.freelancer, false, document, state, city, street, zipCode),
-        "phone" => () => User.Create(name, null!, email, passwordHash, EAccountType.freelancer, false, document, state, city, street, zipCode),
-        "email" => () => User.Create(name, phone, null!, passwordHash, EAccountType.freelancer, false, document, state, city, street, zipCode),
-        "passwordHash" => () => User.Create(name, phone, email, null!, EAccountType.freelancer, false, document, state, city, street, zipCode),
-        "document" => () => User.Create(name, phone, email, passwordHash, EAccountType.freelancer, false, null!, state, city, street, zipCode),
-        "state" => () => User.Create(name, phone, email, passwordHash, EAccountType.freelancer, false, document, null!, city, street, zipCode),
-        "city" => () => User.Create(name, phone, email, passwordHash, EAccountType.freelancer, false, document, state, null!, street, zipCode),
-        "street" => () => User.Create(name, phone, email, passwordHash, EAccountType.freelancer, false, document, state, city, null!, zipCode),
-        "zipCode" => () => User.Create(name, phone, email, passwordHash, EAccountType.freelancer, false, document, state, city, street, null!),
+        "name" => () => User.Create(null!, phone, email, passwordHash, EAccountType.Freelancer, false, document, state, city, street, zipCode),
+        "phone" => () => User.Create(name, null!, email, passwordHash, EAccountType.Freelancer, false, document, state, city, street, zipCode),
+        "email" => () => User.Create(name, phone, null!, passwordHash, EAccountType.Freelancer, false, document, state, city, street, zipCode),
+        "passwordHash" => () => User.Create(name, phone, email, null!, EAccountType.Freelancer, false, document, state, city, street, zipCode),
+        "document" => () => User.Create(name, phone, email, passwordHash, EAccountType.Freelancer, false, null!, state, city, street, zipCode),
+        "state" => () => User.Create(name, phone, email, passwordHash, EAccountType.Freelancer, false, document, null!, city, street, zipCode),
+        "city" => () => User.Create(name, phone, email, passwordHash, EAccountType.Freelancer, false, document, state, null!, street, zipCode),
+        "street" => () => User.Create(name, phone, email, passwordHash, EAccountType.Freelancer, false, document, state, city, null!, zipCode),
+        "zipCode" => () => User.Create(name, phone, email, passwordHash, EAccountType.Freelancer, false, document, state, city, street, null!),
         _ => throw new InvalidOperationException("Invalid test case.")
       };
 
@@ -102,8 +102,8 @@ namespace ContrateJa.Tests.Domain.Entities
 
     public static IEnumerable<object[]> AccountTypesThatDoNotAllowAvailability()
     {
-      yield return new object[] { EAccountType.contractor };
-      yield return new object[] { EAccountType.admin };
+      yield return new object[] { EAccountType.Contractor };
+      yield return new object[] { EAccountType.Admin };
     }
 
     [Theory]
@@ -236,8 +236,8 @@ namespace ContrateJa.Tests.Domain.Entities
 
     public static IEnumerable<object[]> AvailabilityAllowedAccountTypes()
     {
-      yield return new object[] { EAccountType.freelancer };
-      yield return new object[] { EAccountType.both };
+      yield return new object[] { EAccountType.Freelancer };
+      yield return new object[] { EAccountType.Both };
     }
 
     [Theory]
@@ -265,12 +265,12 @@ namespace ContrateJa.Tests.Domain.Entities
     [Fact]
     public void ChangeAccountType_ToNotAllowed_ForcesIsAvailableFalse()
     {
-      var user = CreateUser(accountType: EAccountType.freelancer, isAvailable: true);
+      var user = CreateUser(accountType: EAccountType.Freelancer, isAvailable: true);
       var oldUpdatedAt = user.UpdatedAt;
 
-      user.ChangeAccountType(EAccountType.contractor);
+      user.ChangeAccountType(EAccountType.Contractor);
 
-      Assert.Equal(EAccountType.contractor, user.AccountType);
+      Assert.Equal(EAccountType.Contractor, user.AccountType);
       Assert.False(user.IsAvailable);
       Assert.True(user.UpdatedAt > oldUpdatedAt);
     }

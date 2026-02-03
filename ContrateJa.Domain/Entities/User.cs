@@ -209,7 +209,7 @@ namespace ContrateJa.Domain.Entities
 
     private static bool AllowsAvailability(EAccountType accountType)
     {
-      return accountType == EAccountType.freelancer || accountType == EAccountType.both;
+      return accountType == EAccountType.Freelancer || accountType == EAccountType.Both;
     }
 
     private void Touch()
