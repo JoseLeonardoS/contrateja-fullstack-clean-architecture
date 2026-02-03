@@ -154,7 +154,7 @@ namespace ContrateJa.Domain.Entities
     public void UpdateStatus(EJobStatus newStatus)
     {
       if (!Enum.IsDefined(typeof(EJobStatus), newStatus))
-        throw new ArgumentException("Invalid job status.", nameof(newStatus));
+        throw new ArgumentOutOfRangeException(nameof(newStatus), "Invalid job status.");
 
       if (Status == EJobStatus.Closed)
         throw new InvalidOperationException("You can't change the job status.");

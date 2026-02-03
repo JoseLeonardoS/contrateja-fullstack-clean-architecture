@@ -296,7 +296,7 @@ namespace ContrateJa.Tests.Domain.Entities
     public void UpdateStatus_WithInvalidEnumValue_Throws()
     {
       var job = CreateJob();
-      Assert.Throws<ArgumentException>(() => job.UpdateStatus((EJobStatus)999));
+      Assert.Throws<ArgumentOutOfRangeException>(() => job.UpdateStatus((EJobStatus)999));
     }
 
     [Fact]

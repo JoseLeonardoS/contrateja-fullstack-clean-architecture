@@ -31,49 +31,73 @@ namespace ContrateJa.Domain.Entities
 
       if (reviewedId <= 0)
         throw new ArgumentException("Reviewed Id cannot be lower than 1.", nameof(reviewedId));
+      
+      if(reviewerId == reviewedId)
+        throw new ArgumentException("Reviewer cannot rate himself.", nameof(reviewerId));
 
       if (jobId <= 0)
         throw new ArgumentException("Job Id cannot be lower than 1.", nameof(jobId));
 
+      rating = ValidateRating(rating);
+
+      comment = NormalizeAndValidateComment(comment);
+
+      return new Review(reviewerId, reviewedId, jobId, rating, comment);
+    }
+
+    public void EditReview(int rating, string comment)
+    {
+      rating = ValidateRating(rating);
+      comment = NormalizeAndValidateComment(comment);
+
+      if (Rating == rating && Comment == comment)
+        return;
+      
+      Rating =  rating;
+      Comment = comment;
+      Touch();
+    }
+
+    public void ChangeRating(int rating)
+    {
+      rating = ValidateRating(rating);
+
+      if (Rating == rating) return;
+      
+      Rating = rating;
+      Touch();
+    }
+
+    public void EditComment(string comment)
+    {
+      comment = NormalizeAndValidateComment(comment);
+
+      if (Comment == comment)
+        return;
+
+      Comment = comment;
+      Touch();
+    }
+
+    private static int ValidateRating(int rating)
+    {
       if (rating < 1 || rating > 5)
         throw new ArgumentException("Rating cannot be lower than 1 or greater than 5.", nameof(rating));
 
+      return rating;
+    }
+    
+    private static string NormalizeAndValidateComment(string comment)
+    {
       if (string.IsNullOrWhiteSpace(comment))
         throw new ArgumentException("Comment cannot be null or empty.", nameof(comment));
 
       comment = comment.Trim();
 
       if (comment.Length > 1000)
-        throw new ArgumentException("Commnet is too long.", nameof(comment));
+        throw new ArgumentException("Comment is too long.", nameof(comment));
 
-      return new Review(reviewerId, reviewedId, jobId, rating, comment);
-    }
-
-    public void EditReview(int rating, string commnet)
-    {
-      // TODO: lógica para editar review
-    }
-
-    public void ChangeRating()
-    {
-      // TODO: lógica para editar rating
-    }
-
-    public void EditComment(string newComment)
-    {
-      if (string.IsNullOrEmpty(newComment))
-        throw new ArgumentException("Commnet cannot be null or emtpy.", nameof(newComment));
-
-      newComment = newComment.Trim();
-
-      if (newComment.Length > 1000)
-        throw new ArgumentException("Commnet is too long.", nameof(newComment));
-
-      if (Comment == newComment)
-        return;
-
-      Comment = newComment;
-      Touch();
+      return comment;
     }
 
     private void Touch()

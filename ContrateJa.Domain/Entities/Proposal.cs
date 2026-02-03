@@ -30,43 +30,103 @@ namespace ContrateJa.Domain.Entities
     public static Proposal Create(long jobId, long freelancerId, Money amount, string coverLetter)
     {
       if (jobId <= 0)
-        throw new ArgumentException("Job Id must be positive.", nameof(jobId));
+        throw new ArgumentException("JobId must be greater than zero.", nameof(jobId));
 
       if (freelancerId <= 0)
-        throw new ArgumentException("Freelancer Id must be positive.", nameof(freelancerId));
-      
-      if(amount == null)
-        throw new ArgumentNullException(nameof(amount));
-      
-      if(string.IsNullOrWhiteSpace(coverLetter))
-        throw new ArgumentException("Cover letter cannot be null or white space.", nameof(coverLetter));
-      
-      coverLetter = coverLetter.Trim();
-      
-      if(coverLetter.Length > 1000)
-        throw new ArgumentException("Cover letter cannot be longer than 1000 characters.", nameof(coverLetter));
+        throw new ArgumentException("FreelancerId must be greater than zero.", nameof(freelancerId));
+
+      if (amount == null)
+        throw new ArgumentNullException(nameof(amount), "Amount cannot be null.");
+
+      coverLetter = NormalizeAndValidateCoverLetter(coverLetter);
 
       return new Proposal(jobId, freelancerId, amount, coverLetter);
     }
 
     public void EditProposal(Money amount, string coverLetter)
     {
-      // TODO: lógica para editar proposta 
+      if (Status != EProposalStatus.Sent)
+        throw new InvalidOperationException("Proposal can only be edited when status is Sent.");
+
+      if (amount == null)
+        throw new ArgumentNullException(nameof(amount), "Amount cannot be null.");
+
+      coverLetter = NormalizeAndValidateCoverLetter(coverLetter);
+
+      if (Equals(Amount, amount) && CoverLetter == coverLetter)
+        return;
+
+      Amount = amount;
+      CoverLetter = coverLetter;
+      Touch();
     }
 
     public void EditAmount(Money amount)
     {
-      // TODO: lógica para editar amount
+      if (Status != EProposalStatus.Sent)
+        throw new InvalidOperationException("Amount can only be changed when status is Sent.");
+
+      if (amount == null)
+        throw new ArgumentNullException(nameof(amount), "Amount cannot be null.");
+
+      if (Equals(Amount, amount))
+        return;
+
+      Amount = amount;
+      Touch();
     }
 
     public void EditCoverLetter(string coverLetter)
     {
-      // TODO: lógica para editar Cover Letter
+      if (Status != EProposalStatus.Sent)
+        throw new InvalidOperationException("CoverLetter can only be changed when status is Sent.");
+
+      coverLetter = NormalizeAndValidateCoverLetter(coverLetter);
+
+      if (CoverLetter == coverLetter)
+        return;
+
+      CoverLetter = coverLetter;
+      Touch();
     }
 
-    public void EditStatus(EProposalStatus status)
+    public void EditStatus(EProposalStatus newStatus)
     {
-      // TODO: lógica para editar Status
+      if (!Enum.IsDefined(typeof(EProposalStatus), newStatus))
+        throw new ArgumentOutOfRangeException(nameof(newStatus), "Invalid proposal status.");
+
+      if (newStatus == Status)
+        return;
+
+      if (!IsValidTransition(Status, newStatus))
+        throw new InvalidOperationException($"Invalid transition: {Status} -> {newStatus}.");
+
+      Status = newStatus;
+      Touch();
+    }
+
+    private static bool IsValidTransition(EProposalStatus current, EProposalStatus next)
+    {
+      return current switch
+      {
+        EProposalStatus.Sent => next is EProposalStatus.Accepted or EProposalStatus.Rejected,
+        EProposalStatus.Accepted => false,
+        EProposalStatus.Rejected => false,
+        _ => false
+      };
+    }
+
+    private static string NormalizeAndValidateCoverLetter(string coverLetter)
+    {
+      if (string.IsNullOrWhiteSpace(coverLetter))
+        throw new ArgumentException("CoverLetter cannot be null or empty.", nameof(coverLetter));
+
+      coverLetter = coverLetter.Trim();
+
+      if (coverLetter.Length > 1000)
+        throw new ArgumentException("CoverLetter must not exceed 1000 characters.", nameof(coverLetter));
+
+      return coverLetter;
     }
 
     private void Touch()
