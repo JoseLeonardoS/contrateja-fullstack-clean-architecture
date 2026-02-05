@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ContrateJa.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e04b0eeeeaadf7299cd2b37b7aadcd6a2f53101a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+96c15b92c5f5f762b3c81aaed41c124f3a802e70")]
 [assembly: System.Reflection.AssemblyProductAttribute("ContrateJa.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ContrateJa.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
