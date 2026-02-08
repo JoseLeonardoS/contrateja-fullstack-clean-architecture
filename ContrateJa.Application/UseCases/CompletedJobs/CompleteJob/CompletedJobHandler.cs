@@ -18,7 +18,7 @@ namespace ContrateJa.Application.UseCases.CompletedJobs.CompleteJob
         public async Task Execute(CompletedJobCommand command, CancellationToken ct = default)
         {
             if (await _completedJobRepository.ExistsByJobId(command.JobId, ct))
-                throw new InvalidOperationException($"Job already completed");
+                throw new InvalidOperationException("Job already completed.");
 
             var completedJob = CompletedJob.Create(
                 command.JobId,
