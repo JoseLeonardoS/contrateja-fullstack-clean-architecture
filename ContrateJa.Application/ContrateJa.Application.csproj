@@ -4,10 +4,6 @@
     <ProjectReference Include="..\ContrateJa.Domain\ContrateJa.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UseCases\FreelancerAreas\UpdateFreelancerAreaState\" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -167,8 +167,6 @@ namespace ContrateJa.Domain.Entities
     }
 
     private void Touch()
-    {
-      UpdatedAt = DateTime.UtcNow;
-    }
+      => UpdatedAt = DateTime.UtcNow;
   }
 }

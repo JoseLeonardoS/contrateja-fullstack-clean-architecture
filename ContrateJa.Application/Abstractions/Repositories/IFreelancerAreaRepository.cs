@@ -9,6 +9,5 @@ public interface IFreelancerAreaRepository
     Task<IReadOnlyList<FreelancerArea>> ListByFreelancerId(long freelancerId, CancellationToken ct = default);
     Task<bool> Exists(long freelancerId, Area area, CancellationToken ct = default);
     Task Add(FreelancerArea freelancerArea, CancellationToken ct = default);
-    Task Update(FreelancerArea freelancerArea, CancellationToken ct = default);
     Task Remove(long id, CancellationToken ct = default);
-}
+} 
