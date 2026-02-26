@@ -4,6 +4,16 @@
     <ProjectReference Include="..\ContrateJa.Domain\ContrateJa.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\Proposals\AccetpProposal\" />
+    <Folder Include="UseCases\Proposals\EditProposalAmount\" />
+    <Folder Include="UseCases\Proposals\EditProposalCoverLetter\" />
+    <Folder Include="UseCases\Proposals\GetProposalById\" />
+    <Folder Include="UseCases\Proposals\ListProposalsByFreelancer\" />
+    <Folder Include="UseCases\Proposals\ListProposalsByJob\" />
+    <Folder Include="UseCases\Proposals\RejectProposal\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

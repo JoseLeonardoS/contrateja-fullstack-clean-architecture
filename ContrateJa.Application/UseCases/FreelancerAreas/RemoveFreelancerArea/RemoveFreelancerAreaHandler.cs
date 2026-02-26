@@ -30,7 +30,7 @@ public sealed class RemoveFreelancerAreaHandler
         if(freelancerArea == null)
             throw new InvalidOperationException("Freelancer area not found.");
         
-        await _freelancerAreaRepository.Remove(command.FreelancerAreaId, ct);
+        await _freelancerAreaRepository.Remove(freelancerArea, ct);
         await _unitOfWork.SaveChanges(ct);
     }
 }

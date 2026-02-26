@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ContrateJa.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+16837dfa997067369a247865376c71551c9fed4b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6a9bbcd96b8f9bac2e470774543129584f25d42a")]
 [assembly: System.Reflection.AssemblyProductAttribute("ContrateJa.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ContrateJa.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
