@@ -1,10 +1,9 @@
 {
   "version": 2,
-  "dgSpecHash": "4A9i7z9gjd4=",
+  "dgSpecHash": "PHh8CcLVz3Q=",
   "success": true,
   "projectFilePath": "/home/jose/dev/backend/ContrateJa/ContrateJa.Tests/ContrateJa.Tests.csproj",
   "expectedPackageFiles": [
-    "/home/jose/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/jose/.nuget/packages/coverlet.collector/6.0.4/coverlet.collector.6.0.4.nupkg.sha512",
     "/home/jose/.nuget/packages/microsoft.codecoverage/17.14.1/microsoft.codecoverage.17.14.1.nupkg.sha512",
     "/home/jose/.nuget/packages/microsoft.net.test.sdk/17.14.1/microsoft.net.test.sdk.17.14.1.nupkg.sha512",

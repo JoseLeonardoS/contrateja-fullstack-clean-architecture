@@ -1,10 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LSnTmSM7dFU=",
+  "dgSpecHash": "kWd7dUItDOY=",
   "success": true,
   "projectFilePath": "/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj",
-  "expectedPackageFiles": [
-    "/home/jose/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512"
-  ],
+  "expectedPackageFiles": [],
   "logs": []
 }
