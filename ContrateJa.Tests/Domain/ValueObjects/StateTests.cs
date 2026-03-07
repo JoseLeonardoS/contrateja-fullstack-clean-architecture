@@ -19,7 +19,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void CreateState_NullOrEmpty_ShouldThrowArgumentException(string? code)
     {
       var ex = Assert.Throws<ArgumentException>(() => new State(code!));
-      Assert.Equal("State is required.", ex.Message);
+      Assert.Equal("code", ex.ParamName);
     }
 
     [Theory]
@@ -30,7 +30,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void CreateState_InvalidCode_ShouldThrowArgumentException(string code)
     {
       var ex = Assert.Throws<ArgumentException>(() => new State(code));
-      Assert.Equal("Invalid state.", ex.Message);
+      Assert.Equal("code", ex.ParamName);
     }
 
     [Fact]

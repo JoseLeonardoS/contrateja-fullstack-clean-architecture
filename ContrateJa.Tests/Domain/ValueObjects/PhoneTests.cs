@@ -26,7 +26,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
         new Phone(ECountryCode.BR, number!)
       );
 
-      Assert.Equal("Phone number is required.", ex.Message);
+      Assert.Equal("nationalNumber", ex.ParamName);
     }
 
     [Fact]
@@ -36,7 +36,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
         new Phone((ECountryCode)999, "11987654321")
       );
 
-      Assert.Equal("Invalid country code.", ex.Message);
+      Assert.Equal("countryCode", ex.ParamName);
     }
 
     [Fact]
@@ -46,7 +46,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
         new Phone(ECountryCode.BR, "1234")
       );
 
-      Assert.Equal("Invalid phone number.", ex.Message);
+      Assert.Equal("nationalNumber", ex.ParamName);
     }
 
     [Fact]
@@ -57,7 +57,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
         new Phone(ECountryCode.BR, "12345678901234")
       );
 
-      Assert.Equal("Phone number exceeds E.164 limit.", ex.Message);
+      Assert.Equal("nationalNumber", ex.ParamName);
     }
 
     [Fact]

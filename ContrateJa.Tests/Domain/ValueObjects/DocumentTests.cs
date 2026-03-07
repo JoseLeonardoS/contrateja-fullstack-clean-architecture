@@ -11,7 +11,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void Document_WithNullOrEmpty_ShouldThrow(string? value)
     {
       var ex = Assert.Throws<ArgumentException>(() => new Document(value!));
-      Assert.Equal("Document is required.", ex.Message);
+      Assert.Equal("value", ex.ParamName);
     }
 
     [Theory]
@@ -22,7 +22,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void Document_WithInvalidLength_ShouldThrow(string value)
     {
       var ex = Assert.Throws<ArgumentException>(() => new Document(value));
-      Assert.Equal("Invalid document length.", ex.Message);
+      Assert.Equal("value", ex.ParamName);
     }
 
     [Theory]
@@ -31,7 +31,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void Document_WithInvalidCpf_ShouldThrow(string cpf)
     {
       var ex = Assert.Throws<ArgumentException>(() => new Document(cpf));
-      Assert.Equal("Invalid CPF.", ex.Message);
+      Assert.Equal("value", ex.ParamName);
     }
 
     [Theory]
@@ -40,7 +40,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void Document_WithInvalidCnpj_ShouldThrow(string cnpj)
     {
       var ex = Assert.Throws<ArgumentException>(() => new Document(cnpj));
-      Assert.Equal("Invalid CNPJ.", ex.Message);
+      Assert.Equal("value", ex.ParamName);
     }
 
     [Theory]

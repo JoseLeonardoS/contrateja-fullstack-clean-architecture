@@ -15,16 +15,17 @@ namespace ContrateJa.Domain.ValueObjects
       => $"{City}, {State}";
 
     public bool Equals(Area? other)
-    {
-      return other is not null &&
+      => other is not null &&
               State.Equals(other.State) &&
               City.Equals(other.City);
-    }
 
     public override bool Equals(object? obj)
       => Equals(obj as Area);
 
     public override int GetHashCode()
       => HashCode.Combine(State, City);
+    
+    public static bool operator ==(Area? left, Area? right) => left?.Equals(right) ?? right is null;
+    public static bool operator !=(Area? left, Area? right) => !(left == right);
   }
 }

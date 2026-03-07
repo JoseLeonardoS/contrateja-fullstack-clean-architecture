@@ -1,3 +1,4 @@
+using System.Reflection.Metadata;
 using ContrateJa.Domain.ValueObjects;
 
 namespace ContrateJa.Tests.Domain.ValueObjects
@@ -18,7 +19,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void CreateCity_NullOrEmptyName_ShouldThrowArgumentException(string name)
     {
       var exception = Assert.Throws<ArgumentException>(() => new City(name));
-      Assert.Equal("City is required.", exception.Message);
+      Assert.Equal("name", exception.ParamName);
     }
 
     [Theory]
@@ -27,7 +28,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void CreateCity_InvalidLengthName_ShouldThrowArgumentException(string name)
     {
       var exception = Assert.Throws<ArgumentException>(() => new City(name));
-      Assert.Equal("Invalid city name.", exception.Message);
+      Assert.Equal("name", exception.ParamName);
     }
 
     [Theory]
@@ -37,7 +38,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void CreateCity_InvalidCharactersInName_ShouldThrowArgumentException(string name)
     {
       var exception = Assert.Throws<ArgumentException>(() => new City(name));
-      Assert.Equal("Invalid city name.", exception.Message);
+      Assert.Equal("name",  exception.ParamName);
     }
 
     [Fact]

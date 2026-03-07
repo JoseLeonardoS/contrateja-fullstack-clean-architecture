@@ -12,21 +12,20 @@ namespace ContrateJa.Domain.ValueObjects
     public Phone(ECountryCode countryCode, string nationalNumber)
     {
       if (!Enum.IsDefined(countryCode))
-        throw new ArgumentException("Invalid country code.");
+        throw new ArgumentException("Invalid country code.", nameof(countryCode));
 
       if (string.IsNullOrWhiteSpace(nationalNumber))
-        throw new ArgumentException("Phone number is required.");
+        throw new ArgumentException("Phone number is required.", nameof(nationalNumber));
 
-      var digits = Regex.Replace(nationalNumber, @"\D", "");
+      var digits = NonDigits.Replace(nationalNumber, "");
 
-      // E.164: número nacional + código do país <= 15
       var countryDigits = ((int)countryCode).ToString();
 
       if (digits.Length < 5)
-        throw new ArgumentException("Invalid phone number.");
+        throw new ArgumentException("Invalid phone number.", nameof(nationalNumber));
 
       if ((countryDigits.Length + digits.Length) > 15)
-        throw new ArgumentException("Phone number exceeds E.164 limit.");
+        throw new ArgumentException("Phone number exceeds E.164 limit.", nameof(nationalNumber));
 
       CountryCode = countryCode;
       NationalNumber = digits;
@@ -42,6 +41,11 @@ namespace ContrateJa.Domain.ValueObjects
       => Equals(obj as Phone);
 
     public override int GetHashCode()
-      => E164.GetHashCode();
+      => E164.GetHashCode(StringComparison.Ordinal);
+    
+    public static bool operator ==(Phone? left,  Phone? right) => left?.Equals(right) ?? right is null;
+    public static bool operator !=(Phone? left,  Phone? right) => !(left == right);
+    
+    private static readonly Regex NonDigits= new Regex(@"\D", RegexOptions.Compiled);
   }
 }

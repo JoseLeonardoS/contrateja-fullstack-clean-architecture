@@ -10,27 +10,27 @@ namespace ContrateJa.Domain.ValueObjects
     public Document(string value)
     {
       if (string.IsNullOrWhiteSpace(value))
-        throw new ArgumentException("Document is required.");
+        throw new ArgumentException("Document is required.", nameof(value));
 
-      value = Regex.Replace(value, @"\D", "");
+      value = NonDigit.Replace(value, "");
 
       if (value.Length == 11)
       {
         if (!IsValidCpf(value))
-          throw new ArgumentException("Invalid CPF.");
+          throw new ArgumentException("Invalid CPF.", nameof(value));
 
         Type = EDocumentType.CPF;
       }
       else if (value.Length == 14)
       {
         if (!IsValidCnpj(value))
-          throw new ArgumentException("Invalid CNPJ.");
+          throw new ArgumentException("Invalid CNPJ.", nameof(value));
 
         Type = EDocumentType.CNPJ;
       }
       else
       {
-        throw new ArgumentException("Invalid document length.");
+        throw new ArgumentException("Invalid document length.", nameof(value));
       }
 
       Value = value;
@@ -99,9 +99,14 @@ namespace ContrateJa.Domain.ValueObjects
         => Equals(obj as Document);
 
     public override int GetHashCode()
-        => Value.GetHashCode();
+        => Value.GetHashCode(StringComparison.Ordinal);
 
     public override string ToString()
         => Value;
+    
+    public static bool operator ==(Document? left, Document? right) => left?.Equals(right) ?? right is null;
+    public static bool operator !=(Document? left, Document? right) => !(left == right);
+
+    private static readonly Regex NonDigit = new Regex(@"\D", RegexOptions.Compiled);
   }
 }

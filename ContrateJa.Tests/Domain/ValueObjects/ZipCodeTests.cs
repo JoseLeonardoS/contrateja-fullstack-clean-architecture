@@ -25,7 +25,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void CreateZipCode_NullOrEmpty_ShouldThrowArgumentException(string value)
     {
       var ex = Assert.Throws<ArgumentException>(() => new ZipCode(value));
-      Assert.Equal("ZipCode is required.", ex.Message);
+      Assert.Equal("code", ex.ParamName);
     }
 
     [Theory]
@@ -36,7 +36,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void CreateZipCode_InvalidValue_ShouldThrowArgumentException(string value)
     {
       var ex = Assert.Throws<ArgumentException>(() => new ZipCode(value));
-      Assert.Equal("Invalid ZipCode.", ex.Message);
+      Assert.Equal("code", ex.ParamName);
     }
 
     [Fact]

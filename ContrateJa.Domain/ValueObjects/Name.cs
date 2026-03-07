@@ -12,12 +12,12 @@ namespace ContrateJa.Domain.ValueObjects
     {
       FirstName = Validate(firstName, "First name");
       LastName = Validate(lastName, "Last name");
-      var value = $"{FirstName} {LastName}";
+      var fullName = $"{FirstName} {LastName}";
 
-      if (value.Length > 150)
-        throw new ArgumentException("Name is too long.");
+      if (fullName.Length > 150)
+        throw new ArgumentException("Name is too long.", nameof(fullName));
 
-      FullName = value;
+      FullName = fullName;
 
     }
 
@@ -27,18 +27,18 @@ namespace ContrateJa.Domain.ValueObjects
     private static string Validate(string value, string fieldName)
     {
       if (string.IsNullOrWhiteSpace(value))
-        throw new ArgumentException($"{fieldName} cannot be empty.");
+        throw new ArgumentException($"{fieldName} cannot be empty.", fieldName);
 
       value = value.Trim();
 
       if (value.Length < 3)
-        throw new ArgumentException($"{fieldName} is too short.");
+        throw new ArgumentException($"{fieldName} is too short.", fieldName);
 
       if (value.Any(char.IsDigit))
-        throw new ArgumentException($"{fieldName} cannot contain numbers.");
+        throw new ArgumentException($"{fieldName} cannot contain numbers.", fieldName);
 
-      if (!Regex.IsMatch(value, @"^[A-Za-zÀ-ÖØ-öø-ÿ]+([ '-][A-Za-zÀ-ÖØ-öø-ÿ]+)*$"))
-        throw new ArgumentException($"{fieldName} contains invalid characters.");
+      if (!ValidName.IsMatch(value))
+        throw new ArgumentException($"{fieldName} contains invalid characters.", fieldName);
 
       return value;
     }
@@ -55,5 +55,11 @@ namespace ContrateJa.Domain.ValueObjects
 
     public override int GetHashCode()
         => HashCode.Combine(FirstName, LastName);
+
+    public static bool operator ==(Name? left, Name? right) => left?.Equals(right) ?? right is null;
+    public static bool operator !=(Name? left, Name? right) => !(left == right);
+    
+    private static readonly Regex ValidName = 
+      new Regex(@"^[A-Za-zÀ-ÖØ-öø-ÿ]+([ '-][A-Za-zÀ-ÖØ-öø-ÿ]+)*$", RegexOptions.Compiled);
   }
 }

@@ -17,6 +17,9 @@ namespace ContrateJa.Domain.ValueObjects
 
       if (currency.Length != 3)
         throw new ArgumentException("Currency must be a 3-letter ISO 4217 code.", nameof(currency));
+      
+      if (!currency.All(char.IsLetter))
+        throw new ArgumentException("Currency must contain only letters.", nameof(currency));
 
       Amount = Math.Round(amount, 2, MidpointRounding.AwayFromZero);
       Currency = currency.ToUpperInvariant();
@@ -27,6 +30,12 @@ namespace ContrateJa.Domain.ValueObjects
 
     public bool Equals(Money? other)
       => other is not null && Amount == other.Amount && Currency == other.Currency;
+
+    public override bool Equals(object? obj)
+      => Equals(obj as Money);
+
+    public static bool operator ==(Money? left, Money? right) => left?.Equals(right) ?? right is null;
+    public static bool operator !=(Money? left, Money? right) => !(left == right);
 
     public override int GetHashCode()
       => HashCode.Combine(Amount, Currency);

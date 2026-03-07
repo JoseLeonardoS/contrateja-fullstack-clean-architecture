@@ -9,15 +9,15 @@ namespace ContrateJa.Domain.ValueObjects
     public Street(string name)
     {
       if (string.IsNullOrWhiteSpace(name))
-        throw new ArgumentException("Street is required.");
+        throw new ArgumentException("Street is required.", nameof(name));
 
       name = name.Trim();
 
       if (name.Length < 3 || name.Length > 150)
-        throw new ArgumentException("Invalid street name.");
+        throw new ArgumentException("Invalid street name.", nameof(name));
 
-      if (!Regex.IsMatch(name, @"^[A-Za-zÀ-ÖØ-öø-ÿ0-9]+([ '.\-]+[A-Za-zÀ-ÖØ-öø-ÿ0-9]+)*$"))
-        throw new ArgumentException("Invalid street name.");
+      if (!ValidName.IsMatch(name))
+        throw new ArgumentException("Invalid street name.", nameof(name));
 
       Name = name;
     }
@@ -33,5 +33,10 @@ namespace ContrateJa.Domain.ValueObjects
 
     public override string ToString()
         => Name;
+    
+    public static bool operator ==(Street? left, Street? right) => left?.Equals(right) ?? right is null;
+    public static bool operator !=(Street? left, Street? right) => !(left == right);
+    
+    private static readonly Regex ValidName = new Regex(@"^[A-Za-zÀ-ÖØ-öø-ÿ0-9]+([ '.\-]+[A-Za-zÀ-ÖØ-öø-ÿ0-9]+)*$", RegexOptions.Compiled);
   }
 }

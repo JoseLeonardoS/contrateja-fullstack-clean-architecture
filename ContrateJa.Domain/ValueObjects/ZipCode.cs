@@ -6,17 +6,17 @@ namespace ContrateJa.Domain.ValueObjects
   {
     public string Value { get; }
 
-    public ZipCode(string value)
+    public ZipCode(string code)
     {
-      if (string.IsNullOrWhiteSpace(value))
-        throw new ArgumentException("ZipCode is required.");
+      if (string.IsNullOrWhiteSpace(code))
+        throw new ArgumentException("ZipCode is required.", nameof(code));
 
-      value = Regex.Replace(value, @"\D", "");
+      code = NonDigits.Replace(code, "");
 
-      if (!Regex.IsMatch(value, @"^\d{8}$"))
-        throw new ArgumentException("Invalid ZipCode.");
+      if (!ValidCode.IsMatch(code))
+        throw new ArgumentException("Invalid ZipCode.", nameof(code));
 
-      Value = value;
+      Value = code;
     }
 
     public bool Equals(ZipCode? other)
@@ -26,9 +26,15 @@ namespace ContrateJa.Domain.ValueObjects
         => Equals(obj as ZipCode);
 
     public override int GetHashCode()
-        => Value.GetHashCode();
+        => Value.GetHashCode(StringComparison.Ordinal);
 
     public override string ToString()
         => Value;
+    
+    public static bool operator ==(ZipCode? left, ZipCode? right) => left?.Equals(right) ?? right is null;
+    public static bool operator !=(ZipCode? left, ZipCode? right) => !(left == right);
+    
+    private static readonly Regex NonDigits = new Regex(@"\D", RegexOptions.Compiled);
+    private static readonly Regex ValidCode = new Regex(@"^\d{8}$", RegexOptions.Compiled);
   }
 }

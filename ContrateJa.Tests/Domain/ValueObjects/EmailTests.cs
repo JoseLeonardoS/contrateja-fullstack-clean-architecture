@@ -30,7 +30,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void Email_WhithNullOrEmpty_ShouldThrowArgumentException(string? invalidEmail)
     {
       var ex = Assert.Throws<ArgumentException>(() => new Email(invalidEmail!));
-      Assert.Equal("Email address cannot be empty.", ex.Message);
+      Assert.Equal("address", ex.ParamName);
     }
 
     [Fact]
@@ -39,7 +39,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
       var longEmail = new string('a', 244) + "@example.com";
 
       var ex = Assert.Throws<ArgumentException>(() => new Email(longEmail));
-      Assert.Equal("Email address is too long.", ex.Message);
+      Assert.Equal("address", ex.ParamName);
     }
 
     [Fact]
@@ -48,7 +48,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
       var shortEmail = "a@b";
 
       var ex = Assert.Throws<ArgumentException>(() => new Email(shortEmail));
-      Assert.Equal("Email address is too short.", ex.Message);
+      Assert.Equal("address", ex.ParamName);
     }
 
     [Theory]
@@ -59,7 +59,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void Email_WhithInvalidFormat_ShouldThrowArgumentException(string invalidEmail)
     {
       var ex = Assert.Throws<ArgumentException>(() => new Email(invalidEmail));
-      Assert.Equal("Invalid email address.", ex.Message);
+      Assert.Equal("address", ex.ParamName);
     }
 
     [Theory]

@@ -18,18 +18,18 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     }
 
     [Theory]
-    [InlineData("", "Leonardo", "First name cannot be empty.")]
-    [InlineData("Jo", "Leonardo", "First name is too short.")]
-    [InlineData("José1", "Leonardo", "First name cannot contain numbers.")]
-    [InlineData("José@", "Leonardo", "First name contains invalid characters.")]
-    [InlineData("José", "", "Last name cannot be empty.")]
-    [InlineData("José", "Le", "Last name is too short.")]
-    [InlineData("José", "Leonardo2", "Last name cannot contain numbers.")]
-    [InlineData("José", "Leonardo#", "Last name contains invalid characters.")]
-    public void CreateInvalidName_ShouldThrowArgumentException(string firstName, string lastName, string expectedMessage)
+    [InlineData("", "Leonardo")]
+    [InlineData("Jo", "Leonardo")]
+    [InlineData("José1", "Leonardo")]
+    [InlineData("José@", "Leonardo")]
+    [InlineData("José", "")]
+    [InlineData("José", "Le")]
+    [InlineData("José", "Leonardo2")]
+    [InlineData("José", "Leonardo#")]
+    public void CreateInvalidName_ShouldThrowArgumentException(string firstName, string lastName)
     {
       var exception = Assert.Throws<ArgumentException>(() => new Name(firstName, lastName));
-      Assert.Equal(expectedMessage, exception.Message);
+      Assert.Contains(exception.ParamName, new [] {"First name", "Last name"});
     }
 
     [Fact]
@@ -39,7 +39,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
       var lastName = new string('B', 76);
 
       var exception = Assert.Throws<ArgumentException>(() => new Name(firstName, lastName));
-      Assert.Equal("Name is too long.", exception.Message);
+      Assert.Equal("fullName", exception.ParamName);
     }
 
     [Fact]

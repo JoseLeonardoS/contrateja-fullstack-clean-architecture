@@ -14,12 +14,12 @@ namespace ContrateJa.Domain.ValueObjects
     public State(string code)
     {
       if (string.IsNullOrWhiteSpace(code))
-        throw new ArgumentException("State is required.");
+        throw new ArgumentException("State is required.", nameof(code));
 
       code = code.Trim().ToUpper();
 
       if (!ValidStates.Contains(code))
-        throw new ArgumentException("Invalid state.");
+        throw new ArgumentException("Invalid state.", nameof(code));
 
       Code = code;
     }
@@ -31,9 +31,12 @@ namespace ContrateJa.Domain.ValueObjects
         => Equals(obj as State);
 
     public override int GetHashCode()
-        => Code.GetHashCode();
+        => Code.GetHashCode(StringComparison.Ordinal);
 
     public override string ToString()
         => Code;
+    
+    public static bool operator ==(State? left, State? right) => left?.Equals(right) ?? right is null;
+    public static bool operator !=(State? left, State? right) => !(left == right);
   }
 }

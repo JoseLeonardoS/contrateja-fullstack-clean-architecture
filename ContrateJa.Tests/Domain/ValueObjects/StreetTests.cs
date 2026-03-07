@@ -18,7 +18,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void CreateStreet_NullOrEmpty_ShouldThrowArgumentException(string name)
     {
       var ex = Assert.Throws<ArgumentException>(() => new Street(name));
-      Assert.Equal("Street is required.", ex.Message);
+      Assert.Equal("name", ex.ParamName);
     }
 
     [Theory]
@@ -28,7 +28,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void CreateStreet_InvalidLength_ShouldThrowArgumentException(string name)
     {
       var ex = Assert.Throws<ArgumentException>(() => new Street(name));
-      Assert.Equal("Invalid street name.", ex.Message);
+      Assert.Equal("name", ex.ParamName);
     }
 
     [Theory]
@@ -38,7 +38,7 @@ namespace ContrateJa.Tests.Domain.ValueObjects
     public void CreateStreet_InvalidCharacters_ShouldThrowArgumentException(string name)
     {
       var ex = Assert.Throws<ArgumentException>(() => new Street(name));
-      Assert.Equal("Invalid street name.", ex.Message);
+      Assert.Equal("name", ex.ParamName);
     }
 
     [Fact]

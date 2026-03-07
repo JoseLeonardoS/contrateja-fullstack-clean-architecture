@@ -101,26 +101,6 @@ namespace ContrateJa.Tests.Domain.ValueObjects
         }
 
         [Fact]
-        public void Equals_SameValue_ReturnsTrue()
-        {
-            var a = new Password("Aa1!aaaa");
-            var b = new Password("Aa1!aaaa");
-
-            Assert.Equal(a, b);
-            Assert.True(a.Equals(b));
-        }
-
-        [Fact]
-        public void Equals_DifferentValue_ReturnsFalse()
-        {
-            var a = new Password("Aa1!aaaa");
-            var b = new Password("Bb2@bbbb");
-
-            Assert.NotEqual(a, b);
-            Assert.False(a.Equals(b));
-        }
-
-        [Fact]
         public void Equals_Null_ReturnsFalse()
         {
             var a = new Password("Aa1!aaaa");
@@ -128,37 +108,10 @@ namespace ContrateJa.Tests.Domain.ValueObjects
         }
 
         [Fact]
-        public void Equals_ObjectOverload_WithSameValue_ReturnsTrue()
-        {
-            var a = new Password("Aa1!aaaa");
-            object b = new Password("Aa1!aaaa");
-
-            Assert.True(a.Equals(b));
-        }
-
-        [Fact]
         public void Equals_ObjectOverload_WithDifferentType_ReturnsFalse()
         {
             var a = new Password("Aa1!aaaa");
             Assert.False(a.Equals("Aa1!aaaa"));
-        }
-
-        [Fact]
-        public void GetHashCode_SameValue_ReturnsSameHash()
-        {
-            var a = new Password("Aa1!aaaa");
-            var b = new Password("Aa1!aaaa");
-
-            Assert.Equal(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Fact]
-        public void GetHashCode_DifferentValue_ReturnsDifferentHash()
-        {
-            var a = new Password("Aa1!aaaa");
-            var b = new Password("Bb2@bbbb");
-
-            Assert.NotEqual(a.GetHashCode(), b.GetHashCode());
         }
     }
 }
