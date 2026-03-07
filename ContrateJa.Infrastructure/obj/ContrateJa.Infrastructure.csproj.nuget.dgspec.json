@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj": {}
+    "/home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj": {}
   },
   "projects": {
-    "/home/jose/dev/backend/ContrateJa/ContrateJa.Domain/ContrateJa.Domain.csproj": {
+    "/home/jose/Projects/ContrateJa/ContrateJa.Domain/ContrateJa.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/jose/dev/backend/ContrateJa/ContrateJa.Domain/ContrateJa.Domain.csproj",
+        "projectUniqueName": "/home/jose/Projects/ContrateJa/ContrateJa.Domain/ContrateJa.Domain.csproj",
         "projectName": "ContrateJa.Domain",
-        "projectPath": "/home/jose/dev/backend/ContrateJa/ContrateJa.Domain/ContrateJa.Domain.csproj",
+        "projectPath": "/home/jose/Projects/ContrateJa/ContrateJa.Domain/ContrateJa.Domain.csproj",
         "packagesPath": "/home/jose/.nuget/packages/",
-        "outputPath": "/home/jose/dev/backend/ContrateJa/ContrateJa.Domain/obj/",
+        "outputPath": "/home/jose/Projects/ContrateJa/ContrateJa.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/jose/.nuget/NuGet/NuGet.Config"
@@ -20,7 +20,7 @@
           "net10.0"
         ],
         "sources": {
-          "/usr/lib/dotnet/library-packs": {},
+          "/var/run/host/usr/lib/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -60,7 +60,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/var/run/host/usr/lib/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -338,14 +338,14 @@
         }
       }
     },
-    "/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj": {
+    "/home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj",
+        "projectUniqueName": "/home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj",
         "projectName": "ContrateJa.Infrastructure",
-        "projectPath": "/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj",
+        "projectPath": "/home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj",
         "packagesPath": "/home/jose/.nuget/packages/",
-        "outputPath": "/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/obj/",
+        "outputPath": "/home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/jose/.nuget/NuGet/NuGet.Config"
@@ -354,15 +354,15 @@
           "net10.0"
         ],
         "sources": {
-          "/usr/lib/dotnet/library-packs": {},
+          "/var/run/host/usr/lib/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/home/jose/dev/backend/ContrateJa/ContrateJa.Domain/ContrateJa.Domain.csproj": {
-                "projectPath": "/home/jose/dev/backend/ContrateJa/ContrateJa.Domain/ContrateJa.Domain.csproj"
+              "/home/jose/Projects/ContrateJa/ContrateJa.Domain/ContrateJa.Domain.csproj": {
+                "projectPath": "/home/jose/Projects/ContrateJa/ContrateJa.Domain/ContrateJa.Domain.csproj"
               }
             }
           }
@@ -398,7 +398,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/var/run/host/usr/lib/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

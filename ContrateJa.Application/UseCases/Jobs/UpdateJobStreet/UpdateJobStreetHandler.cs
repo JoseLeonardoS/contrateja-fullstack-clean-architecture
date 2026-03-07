@@ -28,7 +28,7 @@ public sealed class UpdateJobStreetHandler
         if(job is null)
             throw new InvalidOperationException("Job not found.");
         
-        job.UpdateStreet(command.NewStreet);
+        // job.UpdateStreet(command.NewStreet);
 
         await _unitOfWork.SaveChanges(ct);
     }

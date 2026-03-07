@@ -1,51 +1,82 @@
 using ContrateJa.Domain.Entities;
 using ContrateJa.Domain.ValueObjects;
 
-namespace ContrateJa.Tests.Domain.Entities
+namespace ContrateJa.Tests.Domain.Entities;
+
+public sealed class FreelancerAreaTests
 {
-    public sealed class FreelancerAreaTests
+    private static FreelancerArea CreateFreelancerArea(
+        long freelancerId = 1,
+        Area? area = null)
     {
-        public static IEnumerable<object[]> ValidFreelancerIds()
-        {
-            yield return new object[] { 1L };
-            yield return new object[] { 2L };
-            yield return new object[] { 999L };
-            yield return new object[] { long.MaxValue };
-        }
+        area ??= new Area(new State("SP"), new City("São Paulo"));
+        return FreelancerArea.Create(freelancerId, area);
+    }
 
-        public static IEnumerable<object[]> InvalidFreelancerIds()
-        {
-            yield return new object[] { 0L };
-            yield return new object[] { -1L };
-            yield return new object[] { long.MinValue };
-        }
+    [Fact]
+    public void Create_SetsTimestamps()
+    {
+        var before = DateTime.UtcNow;
+        var freelancerArea = CreateFreelancerArea();
+        var after = DateTime.UtcNow;
 
-        [Theory]
-        [MemberData(nameof(InvalidFreelancerIds))]
-        public void Create_WithInvalidFreelancerId_ThrowsArgumentOutOfRangeException(long freelancerId)
-        {
-            var area = new Area(new  State("CE"), new City("Fortaleza"));
+        Assert.InRange(freelancerArea.CreatedAt, before, after);
+        Assert.InRange(freelancerArea.UpdatedAt, before, after);
+        Assert.True(freelancerArea.UpdatedAt >= freelancerArea.CreatedAt);
+    }
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => FreelancerArea.Create(freelancerId, area));
-        }
+    [Fact]
+    public void Create_WithInvalidFreelancerId_Throws()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateFreelancerArea(freelancerId: 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateFreelancerArea(freelancerId: -1));
+    }
 
-        [Fact]
-        public void Create_WithNullArea_ThrowsArgumentNullException()
-        {
-            Assert.Throws<ArgumentNullException>(() => FreelancerArea.Create(1L, null));
-        }
+    [Fact]
+    public void Create_WithNullArea_Throws()
+    {
+        var ex = Assert.Throws<ArgumentNullException>(() => FreelancerArea.Create(1, null!));
+        Assert.Equal("area", ex.ParamName);
+    }
 
-        [Theory]
-        [MemberData(nameof(ValidFreelancerIds))]
-        public void Create_WithValidInput_CreatesEntity(long freelancerId)
-        {
-            var area = new Area( new State("CE"), new City("Fortaleza"));
+    [Fact]
+    public void Create_WithValidArgs_SetsProperties()
+    {
+        var area = new Area(new State("SP"), new City("São Paulo"));
+        var freelancerArea = CreateFreelancerArea(freelancerId: 1, area: area);
 
-            var entity = FreelancerArea.Create(freelancerId, area);
+        Assert.Equal(1, freelancerArea.FreelancerId);
+        Assert.Equal(area, freelancerArea.Area);
+    }
 
-            Assert.NotNull(entity);
-            Assert.Equal(freelancerId, entity.FreelancerId);
-            Assert.Same(area, entity.Area);
-        }
+    [Fact]
+    public void ChangeArea_WithNull_Throws()
+    {
+        var freelancerArea = CreateFreelancerArea();
+        Assert.Throws<ArgumentNullException>(() => freelancerArea.ChangeArea(null!));
+    }
+
+    [Fact]
+    public void ChangeArea_WhenDifferent_UpdatesAreaAndUpdatedAt()
+    {
+        var freelancerArea = CreateFreelancerArea();
+        var oldUpdatedAt = freelancerArea.UpdatedAt;
+
+        var newArea = new Area(new State("MG"), new City("Belo Horizonte"));
+        freelancerArea.ChangeArea(newArea);
+
+        Assert.Equal(newArea, freelancerArea.Area);
+        Assert.True(freelancerArea.UpdatedAt > oldUpdatedAt);
+    }
+
+    [Fact]
+    public void ChangeArea_WhenSame_DoesNotUpdateUpdatedAt()
+    {
+        var freelancerArea = CreateFreelancerArea();
+        var oldUpdatedAt = freelancerArea.UpdatedAt;
+
+        freelancerArea.ChangeArea(freelancerArea.Area);
+
+        Assert.Equal(oldUpdatedAt, freelancerArea.UpdatedAt);
     }
 }

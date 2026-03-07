@@ -2,333 +2,311 @@ using ContrateJa.Domain.Entities;
 using ContrateJa.Domain.Enums;
 using ContrateJa.Domain.ValueObjects;
 
-namespace ContrateJa.Tests.Domain.Entities
+namespace ContrateJa.Tests.Domain.Entities;
+
+public sealed class JobTests
 {
-  public sealed class JobTests
-  {
     private static Job CreateJob(
-      long contractorId = 1,
-      string? title = null,
-      string? description = null,
-      State? state = null,
-      City? city = null,
-      Street? street = null,
-      ZipCode? zipCode = null)
+        long contractorId = 1,
+        string title = "Título do Job",
+        string description = "Descrição do job de exemplo.",
+        State? state = null,
+        City? city = null,
+        Street? street = null,
+        ZipCode? zipCode = null)
     {
-      title ??= "Plumbing service";
-      description ??= "Fix leaking faucet.";
-      state ??= new State("SP");
-      city ??= new City("São Paulo");
-      street ??= new Street("Av. Exemplo");
-      zipCode ??= new ZipCode("01001000");
+        state ??= new State("SP");
+        city ??= new City("São Paulo");
+        street ??= new Street("Av. Exemplo");
+        zipCode ??= new ZipCode("01001000");
 
-      return Job.Create(contractorId, title, description, state, city, street, zipCode);
-    }
-
-    [Fact]
-    public void Create_SetsDefaultStatusToOpen()
-    {
-      var job = CreateJob();
-      Assert.Equal(EJobStatus.Open, job.Status);
+        return Job.Create(contractorId, title, description, state, city, street, zipCode);
     }
 
     [Fact]
     public void Create_SetsTimestamps()
     {
-      var before = DateTime.UtcNow;
-      var job = CreateJob();
-      var after = DateTime.UtcNow;
+        var before = DateTime.UtcNow;
+        var job = CreateJob();
+        var after = DateTime.UtcNow;
 
-      Assert.InRange(job.CreatedAt, before, after);
-      Assert.InRange(job.UpdatedAt, before, after);
-      Assert.True(job.UpdatedAt >= job.CreatedAt);
-    }
-
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-1)]
-    public void Create_WithInvalidContractorId_Throws(long contractorId)
-    {
-      var ex = Assert.Throws<ArgumentException>(() => CreateJob(contractorId: contractorId));
-      Assert.Equal("contractorId", ex.ParamName);
-    }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    public void Create_WithInvalidTitle_Throws(string? title)
-    {
-      var ex = Assert.Throws<ArgumentException>(() => CreateJob(title: title));
-      Assert.Equal("title", ex.ParamName);
+        Assert.InRange(job.CreatedAt, before, after);
+        Assert.InRange(job.UpdatedAt, before, after);
+        Assert.True(job.UpdatedAt >= job.CreatedAt);
     }
 
     [Fact]
-    public void Create_WithTooLongTitle_Throws()
+    public void Create_SetsStatusToOpen()
     {
-      var title = new string('a', 151);
-      var ex = Assert.Throws<ArgumentException>(() => CreateJob(title: title));
-      Assert.Equal("title", ex.ParamName);
-    }
+        var job = CreateJob();
 
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    public void Create_WithInvalidDescription_Throws(string? description)
-    {
-      var ex = Assert.Throws<ArgumentException>(() => CreateJob(description: description));
-      Assert.Equal("description", ex.ParamName);
+        Assert.Equal(EJobStatus.Open, job.Status);
     }
 
     [Fact]
-    public void Create_WithTooLongDescription_Throws()
+    public void Create_WithInvalidContractorId_Throws()
     {
-      var description = new string('a', 1001);
-      var ex = Assert.Throws<ArgumentException>(() => CreateJob(description: description));
-      Assert.Equal("description", ex.ParamName);
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateJob(contractorId: 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateJob(contractorId: -1));
+    }
+
+    public static IEnumerable<object[]> NullOrWhitespaceTitles()
+    {
+        yield return new object[] { null! };
+        yield return new object[] { "" };
+        yield return new object[] { "   " };
+    }
+
+    [Theory]
+    [MemberData(nameof(NullOrWhitespaceTitles))]
+    public void Create_WithNullOrWhitespaceTitle_Throws(string? title)
+    {
+        Assert.Throws<ArgumentException>(() => CreateJob(title: title!));
+    }
+
+    [Fact]
+    public void Create_WithTitleExceeding150Chars_Throws()
+    {
+        var title = new string('a', 151);
+        Assert.Throws<ArgumentException>(() => CreateJob(title: title));
+    }
+
+    public static IEnumerable<object[]> NullOrWhitespaceDescriptions()
+    {
+        yield return new object[] { null! };
+        yield return new object[] { "" };
+        yield return new object[] { "   " };
+    }
+
+    [Theory]
+    [MemberData(nameof(NullOrWhitespaceDescriptions))]
+    public void Create_WithNullOrWhitespaceDescription_Throws(string? description)
+    {
+        Assert.Throws<ArgumentException>(() => CreateJob(description: description!));
+    }
+
+    [Fact]
+    public void Create_WithDescriptionExceeding1000Chars_Throws()
+    {
+        var description = new string('a', 1001);
+        Assert.Throws<ArgumentException>(() => CreateJob(description: description));
     }
 
     public static IEnumerable<object[]> NullAddressArgs()
     {
-      yield return new object[] { "state" };
-      yield return new object[] { "city" };
-      yield return new object[] { "street" };
-      yield return new object[] { "zipCode" };
+        yield return new object[] { "state" };
+        yield return new object[] { "city" };
+        yield return new object[] { "street" };
+        yield return new object[] { "zipCode" };
     }
 
     [Theory]
     [MemberData(nameof(NullAddressArgs))]
-    public void Create_WithNullAddressPart_ThrowsArgumentNullException(string paramName)
+    public void Create_WithNullAddressArgument_Throws(string paramName)
     {
-      var state = new State("SP");
-      var city = new City("São Paulo");
-      var street = new Street("Av. Exemplo");
-      var zipCode = new ZipCode("01001000");
+        var state = new State("SP");
+        var city = new City("São Paulo");
+        var street = new Street("Av. Exemplo");
+        var zipCode = new ZipCode("01001000");
 
-      Action act = paramName switch
-      {
-        "state" => () => Job.Create(1, "Title", "Desc", null!, city, street, zipCode),
-        "city" => () => Job.Create(1, "Title", "Desc", state, null!, street, zipCode),
-        "street" => () => Job.Create(1, "Title", "Desc", state, city, null!, zipCode),
-        "zipCode" => () => Job.Create(1, "Title", "Desc", state, city, street, null!),
-        _ => throw new InvalidOperationException("Invalid test case.")
-      };
+        Action act = paramName switch
+        {
+            "state" => () => Job.Create(1, "Título", "Descrição", null!, city, street, zipCode),
+            "city" => () => Job.Create(1, "Título", "Descrição", state, null!, street, zipCode),
+            "street" => () => Job.Create(1, "Título", "Descrição", state, city, null!, zipCode),
+            "zipCode" => () => Job.Create(1, "Título", "Descrição", state, city, street, null!),
+            _ => throw new InvalidOperationException("Invalid test case.")
+        };
 
-      var ex = Assert.Throws<ArgumentNullException>(act);
-      Assert.Equal(paramName, ex.ParamName);
+        var ex = Assert.Throws<ArgumentNullException>(act);
+        Assert.Equal(paramName, ex.ParamName);
     }
 
     [Fact]
-    public void Create_TrimsTitleAndDescription()
+    public void UpdateTitle_WithNullOrWhitespace_Throws()
     {
-      var job = CreateJob(title: "  My Title  ", description: "  My Desc  ");
-      Assert.Equal("My Title", job.Title);
-      Assert.Equal("My Desc", job.Description);
+        var job = CreateJob();
+        Assert.Throws<ArgumentException>(() => job.UpdateTitle(null!));
+        Assert.Throws<ArgumentException>(() => job.UpdateTitle(""));
+        Assert.Throws<ArgumentException>(() => job.UpdateTitle("   "));
     }
 
     [Fact]
-    public void UpdateTitle_WithNullOrWhiteSpace_Throws()
+    public void UpdateTitle_WithTitleExceeding150Chars_Throws()
     {
-      var job = CreateJob();
-      Assert.Throws<ArgumentException>(() => job.UpdateTitle(" "));
+        var job = CreateJob();
+        Assert.Throws<ArgumentException>(() => job.UpdateTitle(new string('a', 151)));
     }
 
     [Fact]
     public void UpdateTitle_WhenDifferent_UpdatesTitleAndUpdatedAt()
     {
-      var job = CreateJob();
-      var oldUpdatedAt = job.UpdatedAt;
+        var job = CreateJob();
+        var oldUpdatedAt = job.UpdatedAt;
 
-      job.UpdateTitle("New title");
+        job.UpdateTitle("Novo Título");
 
-      Assert.Equal("New title", job.Title);
-      Assert.True(job.UpdatedAt > oldUpdatedAt);
+        Assert.Equal("Novo Título", job.Title);
+        Assert.True(job.UpdatedAt > oldUpdatedAt);
     }
 
     [Fact]
     public void UpdateTitle_WhenSame_DoesNotUpdateUpdatedAt()
     {
-      var job = CreateJob();
-      var oldUpdatedAt = job.UpdatedAt;
+        var job = CreateJob();
+        var oldUpdatedAt = job.UpdatedAt;
 
-      job.UpdateTitle(job.Title);
+        job.UpdateTitle(job.Title);
 
-      Assert.Equal(oldUpdatedAt, job.UpdatedAt);
+        Assert.Equal(oldUpdatedAt, job.UpdatedAt);
     }
 
     [Fact]
-    public void UpdateTitle_TrimsInput()
+    public void UpdateDescription_WithNullOrWhitespace_Throws()
     {
-      var job = CreateJob();
-      job.UpdateTitle("  New title  ");
-      Assert.Equal("New title", job.Title);
+        var job = CreateJob();
+        Assert.Throws<ArgumentException>(() => job.UpdateDescription(null!));
+        Assert.Throws<ArgumentException>(() => job.UpdateDescription(""));
+        Assert.Throws<ArgumentException>(() => job.UpdateDescription("   "));
     }
 
     [Fact]
-    public void UpdateDescription_WithNullOrWhiteSpace_Throws()
+    public void UpdateDescription_WithDescriptionExceeding1000Chars_Throws()
     {
-      var job = CreateJob();
-      Assert.Throws<ArgumentException>(() => job.UpdateDescription(" "));
+        var job = CreateJob();
+        Assert.Throws<ArgumentException>(() => job.UpdateDescription(new string('a', 1001)));
     }
 
     [Fact]
     public void UpdateDescription_WhenDifferent_UpdatesDescriptionAndUpdatedAt()
     {
-      var job = CreateJob();
-      var oldUpdatedAt = job.UpdatedAt;
+        var job = CreateJob();
+        var oldUpdatedAt = job.UpdatedAt;
 
-      job.UpdateDescription("New description");
+        job.UpdateDescription("Nova descrição do job.");
 
-      Assert.Equal("New description", job.Description);
-      Assert.True(job.UpdatedAt > oldUpdatedAt);
+        Assert.Equal("Nova descrição do job.", job.Description);
+        Assert.True(job.UpdatedAt > oldUpdatedAt);
     }
 
     [Fact]
     public void UpdateDescription_WhenSame_DoesNotUpdateUpdatedAt()
     {
-      var job = CreateJob();
-      var oldUpdatedAt = job.UpdatedAt;
+        var job = CreateJob();
+        var oldUpdatedAt = job.UpdatedAt;
 
-      job.UpdateDescription(job.Description);
+        job.UpdateDescription(job.Description);
 
-      Assert.Equal(oldUpdatedAt, job.UpdatedAt);
+        Assert.Equal(oldUpdatedAt, job.UpdatedAt);
     }
 
     [Fact]
-    public void UpdateDescription_TrimsInput()
+    public void UpdateAddress_WithNullState_Throws()
     {
-      var job = CreateJob();
-      job.UpdateDescription("  New description  ");
-      Assert.Equal("New description", job.Description);
+        var job = CreateJob();
+        Assert.Throws<ArgumentNullException>(() => job.UpdateAddress(null!, new City("SP"), new Street("Rua"), new ZipCode("01001000")));
     }
 
     [Fact]
-    public void UpdateState_WithNull_Throws()
+    public void UpdateAddress_WithNullCity_Throws()
     {
-      var job = CreateJob();
-      Assert.Throws<ArgumentNullException>(() => job.UpdateState(null!));
+        var job = CreateJob();
+        Assert.Throws<ArgumentNullException>(() => job.UpdateAddress(new State("SP"), null!, new Street("Rua"), new ZipCode("01001000")));
     }
 
     [Fact]
-    public void UpdateState_WhenDifferent_UpdatesStateAndUpdatedAt()
+    public void UpdateAddress_WithNullStreet_Throws()
     {
-      var job = CreateJob();
-      var oldUpdatedAt = job.UpdatedAt;
-
-      var newState = new State("RJ");
-      job.UpdateState(newState);
-
-      Assert.Equal(newState, job.State);
-      Assert.True(job.UpdatedAt > oldUpdatedAt);
+        var job = CreateJob();
+        Assert.Throws<ArgumentNullException>(() => job.UpdateAddress(new State("SP"), new City("SP"), null!, new ZipCode("01001000")));
     }
 
     [Fact]
-    public void UpdateState_WhenSame_DoesNotUpdateUpdatedAt()
+    public void UpdateAddress_WithNullZipCode_Throws()
     {
-      var job = CreateJob();
-      var oldUpdatedAt = job.UpdatedAt;
-
-      job.UpdateState(job.State);
-
-      Assert.Equal(oldUpdatedAt, job.UpdatedAt);
+        var job = CreateJob();
+        Assert.Throws<ArgumentNullException>(() => job.UpdateAddress(new State("SP"), new City("SP"), new Street("Rua"), null!));
     }
 
     [Fact]
-    public void UpdateCity_WithNull_Throws()
+    public void UpdateAddress_WhenDifferent_UpdatesAddressAndUpdatedAt()
     {
-      var job = CreateJob();
-      Assert.Throws<ArgumentNullException>(() => job.UpdateCity(null!));
+        var job = CreateJob();
+        var oldUpdatedAt = job.UpdatedAt;
+
+        var newState = new State("MG");
+        var newCity = new City("Belo Horizonte");
+        var newStreet = new Street("Rua Nova");
+        var newZipCode = new ZipCode("30140071");
+
+        job.UpdateAddress(newState, newCity, newStreet, newZipCode);
+
+        Assert.Equal(newState, job.State);
+        Assert.Equal(newCity, job.City);
+        Assert.Equal(newStreet, job.Street);
+        Assert.Equal(newZipCode, job.ZipCode);
+        Assert.True(job.UpdatedAt > oldUpdatedAt);
     }
 
     [Fact]
-    public void UpdateCity_WhenDifferent_UpdatesCityAndUpdatedAt()
+    public void UpdateAddress_WhenSame_DoesNotUpdateUpdatedAt()
     {
-      var job = CreateJob();
-      var oldUpdatedAt = job.UpdatedAt;
+        var job = CreateJob();
+        var oldUpdatedAt = job.UpdatedAt;
 
-      var newCity = new City("Rio de Janeiro");
-      job.UpdateCity(newCity);
+        job.UpdateAddress(job.State, job.City, job.Street, job.ZipCode);
 
-      Assert.Equal(newCity, job.City);
-      Assert.True(job.UpdatedAt > oldUpdatedAt);
+        Assert.Equal(oldUpdatedAt, job.UpdatedAt);
     }
 
-    [Fact]
-    public void UpdateStreet_WithNull_Throws()
+    public static IEnumerable<object[]> ValidJobStatusTransitions()
     {
-      var job = CreateJob();
-      Assert.Throws<ArgumentNullException>(() => job.UpdateStreet(null!));
+        yield return new object[] { EJobStatus.Open, EJobStatus.InProgress };
+        yield return new object[] { EJobStatus.Open, EJobStatus.Closed };
+        yield return new object[] { EJobStatus.InProgress, EJobStatus.Closed };
     }
 
-    [Fact]
-    public void UpdateStreet_WhenDifferent_UpdatesStreetAndUpdatedAt()
+    [Theory]
+    [MemberData(nameof(ValidJobStatusTransitions))]
+    public void UpdateStatus_WithValidTransition_UpdatesStatusAndUpdatedAt(EJobStatus from, EJobStatus to)
     {
-      var job = CreateJob();
-      var oldUpdatedAt = job.UpdatedAt;
+        var job = CreateJob();
+        if (from == EJobStatus.InProgress)
+            job.UpdateStatus(EJobStatus.InProgress);
 
-      var newStreet = new Street("Rua Teste");
-      job.UpdateStreet(newStreet);
+        var oldUpdatedAt = job.UpdatedAt;
+        job.UpdateStatus(to);
 
-      Assert.Equal(newStreet, job.Street);
-      Assert.True(job.UpdatedAt > oldUpdatedAt);
+        Assert.Equal(to, job.Status);
+        Assert.True(job.UpdatedAt > oldUpdatedAt);
     }
 
-    [Fact]
-    public void UpdateZipCode_WithNull_Throws()
+    public static IEnumerable<object[]> InvalidJobStatusTransitions()
     {
-      var job = CreateJob();
-      Assert.Throws<ArgumentNullException>(() => job.UpdateZipCode(null!));
+        yield return new object[] { EJobStatus.Closed, EJobStatus.Open };
+        yield return new object[] { EJobStatus.Closed, EJobStatus.InProgress };
+        yield return new object[] { EJobStatus.InProgress, EJobStatus.Open };
     }
 
-    [Fact]
-    public void UpdateZipCode_WhenDifferent_UpdatesZipCodeAndUpdatedAt()
+    [Theory]
+    [MemberData(nameof(InvalidJobStatusTransitions))]
+    public void UpdateStatus_WithInvalidTransition_Throws(EJobStatus from, EJobStatus to)
     {
-      var job = CreateJob();
-      var oldUpdatedAt = job.UpdatedAt;
+        var job = CreateJob();
+        if (from != EJobStatus.Open)
+            job.UpdateStatus(from == EJobStatus.InProgress ? EJobStatus.InProgress : EJobStatus.Closed);
 
-      var newZip = new ZipCode("30140071");
-      job.UpdateZipCode(newZip);
-
-      Assert.Equal(newZip, job.ZipCode);
-      Assert.True(job.UpdatedAt > oldUpdatedAt);
-    }
-
-    [Fact]
-    public void UpdateStatus_WithInvalidEnumValue_Throws()
-    {
-      var job = CreateJob();
-      Assert.Throws<ArgumentOutOfRangeException>(() => job.UpdateStatus((EJobStatus)999));
-    }
-
-    [Fact]
-    public void UpdateStatus_WhenDifferent_UpdatesStatusAndUpdatedAt()
-    {
-      var job = CreateJob();
-      var oldUpdatedAt = job.UpdatedAt;
-
-      job.UpdateStatus(EJobStatus.Closed);
-
-      Assert.Equal(EJobStatus.Closed, job.Status);
-      Assert.True(job.UpdatedAt > oldUpdatedAt);
+        Assert.Throws<InvalidOperationException>(() => job.UpdateStatus(to));
     }
 
     [Fact]
     public void UpdateStatus_WhenSame_DoesNotUpdateUpdatedAt()
     {
-      var job = CreateJob();
-      var oldUpdatedAt = job.UpdatedAt;
+        var job = CreateJob();
+        var oldUpdatedAt = job.UpdatedAt;
 
-      job.UpdateStatus(job.Status);
+        job.UpdateStatus(job.Status);
 
-      Assert.Equal(oldUpdatedAt, job.UpdatedAt);
+        Assert.Equal(oldUpdatedAt, job.UpdatedAt);
     }
-
-    [Fact]
-    public void UpdateStatus_WhenAlreadyClosed_Throws()
-    {
-      var job = CreateJob();
-      job.UpdateStatus(EJobStatus.Closed);
-
-      Assert.Throws<InvalidOperationException>(() => job.UpdateStatus(EJobStatus.Open));
-    }
-  }
 }

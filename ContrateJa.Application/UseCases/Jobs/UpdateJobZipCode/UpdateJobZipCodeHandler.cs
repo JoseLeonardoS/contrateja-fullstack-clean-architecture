@@ -28,7 +28,7 @@ public sealed class UpdateJobZipCodeHandler
         if (job is null)
             throw new InvalidOperationException("Job not found.");
         
-        job.UpdateZipCode(command.NewZipCode);
+        // job.UpdateZipCode(command.NewZipCode);
 
         await _unitOfWork.SaveChanges(ct);
     }

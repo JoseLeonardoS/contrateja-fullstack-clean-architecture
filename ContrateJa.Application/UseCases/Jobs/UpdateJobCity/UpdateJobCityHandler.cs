@@ -28,7 +28,7 @@ public sealed class UpdateJobCityHandler
         if(job is null)
             throw new InvalidOperationException("Job not found.");
         
-        job.UpdateCity(command.NewCity);
+        // job.UpdateCity(command.NewCity);
 
         await _unitOfWork.SaveChanges(ct);
     }

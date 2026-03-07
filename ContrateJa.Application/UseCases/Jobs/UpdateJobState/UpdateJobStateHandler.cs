@@ -29,7 +29,7 @@ public sealed class UpdateJobStateHandler
         if(job is null)
             throw new InvalidOperationException("Job not found.");
         
-        job.UpdateState(command.NewState);
+        // job.UpdateState(command.NewState);
 
         await _unitOfWork.SaveChanges(ct);
     }

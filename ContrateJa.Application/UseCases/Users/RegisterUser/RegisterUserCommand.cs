@@ -9,7 +9,7 @@ public sealed class RegisterUserCommand
   public Name Name { get; }
   public Phone Phone { get; }
   public Email Email { get; }
-  public PasswordHash PasswordHash { get; }
+  public Password PasswordHash { get; }
   public EAccountType AccountType { get; }
   public bool IsAvailable { get; }
   public Document Document { get; }
@@ -23,7 +23,7 @@ public sealed class RegisterUserCommand
     Name name,
     Phone phone,
     Email email,
-    PasswordHash passwordHash,
+    Password passwordHash,
     EAccountType accountType,
     bool isAvailable,
     Document document,

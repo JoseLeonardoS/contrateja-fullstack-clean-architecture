@@ -2,186 +2,250 @@ using ContrateJa.Domain.Entities;
 using ContrateJa.Domain.Enums;
 using ContrateJa.Domain.ValueObjects;
 
-namespace ContrateJa.Tests.Domain.Entities
+namespace ContrateJa.Tests.Domain.Entities;
+
+public sealed class ProposalTests
 {
-  public sealed class ProposalTests
-  {
-    private static Money CreateValidMoney()
+    private static Proposal CreateProposal(
+        long jobId = 1,
+        long freelancerId = 2,
+        Money? amount = null,
+        string coverLetter = "Carta de apresentação de exemplo.")
     {
-      return new Money(100m);
-    }
-
-    public static IEnumerable<object[]> InvalidIds()
-    {
-      yield return new object[] { 0L };
-      yield return new object[] { -1L };
-    }
-
-    public static IEnumerable<object[]> InvalidCoverLetters()
-    {
-      yield return new object[] { "" };
-      yield return new object[] { " " };
-      yield return new object[] { "   " };
-      yield return new object[] { "\t" };
-      yield return new object[] { "\n" };
+        amount ??= new Money(100, "BRL");
+        return Proposal.Create(jobId, freelancerId, amount, coverLetter);
     }
 
     [Fact]
-    public void Create_WhenValid_SetsDefaultValues()
+    public void Create_SetsTimestamps()
     {
-      var proposal = Proposal.Create(1, 2, CreateValidMoney(), "Hello");
+        var before = DateTime.UtcNow;
+        var proposal = CreateProposal();
+        var after = DateTime.UtcNow;
 
-      Assert.Equal(1, proposal.JobId);
-      Assert.Equal(2, proposal.FreelancerId);
-      Assert.Equal("Hello", proposal.CoverLetter);
-      Assert.Equal(EProposalStatus.Sent, proposal.Status);
-      Assert.NotEqual(default, proposal.SubmittedAt);
-      Assert.NotEqual(default, proposal.UpdatedAt);
+        Assert.InRange(proposal.CreatedAt, before, after);
+        Assert.InRange(proposal.UpdatedAt, before, after);
+        Assert.InRange(proposal.SubmittedAt, before, after);
+        Assert.True(proposal.UpdatedAt >= proposal.CreatedAt);
     }
 
     [Fact]
-    public void Create_TrimsCoverLetter()
+    public void Create_SetsStatusToSent()
     {
-      var proposal = Proposal.Create(1, 2, CreateValidMoney(), "  Hello  ");
-
-      Assert.Equal("Hello", proposal.CoverLetter);
+        var proposal = CreateProposal();
+        Assert.Equal(EProposalStatus.Sent, proposal.Status);
     }
 
-    [Theory]
-    [MemberData(nameof(InvalidIds))]
-    public void Create_WithInvalidJobId_Throws(long jobId)
+    [Fact]
+    public void Create_WithInvalidJobId_Throws()
     {
-      Assert.Throws<ArgumentException>(() =>
-        Proposal.Create(jobId, 1, CreateValidMoney(), "Hello"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateProposal(jobId: 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateProposal(jobId: -1));
     }
 
-    [Theory]
-    [MemberData(nameof(InvalidIds))]
-    public void Create_WithInvalidFreelancerId_Throws(long freelancerId)
+    [Fact]
+    public void Create_WithInvalidFreelancerId_Throws()
     {
-      Assert.Throws<ArgumentException>(() =>
-        Proposal.Create(1, freelancerId, CreateValidMoney(), "Hello"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateProposal(freelancerId: 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateProposal(freelancerId: -1));
     }
 
     [Fact]
     public void Create_WithNullAmount_Throws()
     {
-      Assert.Throws<ArgumentNullException>(() =>
-        Proposal.Create(1, 2, null!, "Hello"));
+        var ex = Assert.Throws<ArgumentNullException>(() => 
+            Proposal.Create(1, 2, null!, "Carta de apresentação de exemplo."));
+        Assert.Equal("amount", ex.ParamName);
+    }
+
+    public static IEnumerable<object[]> NullOrWhitespaceCoverLetters()
+    {
+        yield return new object[] { null! };
+        yield return new object[] { "" };
+        yield return new object[] { "   " };
     }
 
     [Theory]
-    [MemberData(nameof(InvalidCoverLetters))]
-    public void Create_WithInvalidCoverLetter_Throws(string coverLetter)
+    [MemberData(nameof(NullOrWhitespaceCoverLetters))]
+    public void Create_WithNullOrWhitespaceCoverLetter_Throws(string? coverLetter)
     {
-      Assert.Throws<ArgumentException>(() =>
-        Proposal.Create(1, 2, CreateValidMoney(), coverLetter));
+        Assert.Throws<ArgumentException>(() => CreateProposal(coverLetter: coverLetter!));
     }
 
     [Fact]
-    public void EditProposal_WhenStatusNotSent_Throws()
+    public void Create_WithCoverLetterExceeding1000Chars_Throws()
     {
-      var proposal = Proposal.Create(1, 2, CreateValidMoney(), "Hello");
-      proposal.EditStatus(EProposalStatus.Accepted);
-
-      Assert.Throws<InvalidOperationException>(() =>
-        proposal.EditProposal(CreateValidMoney(), "New"));
+        Assert.Throws<ArgumentException>(() => CreateProposal(coverLetter: new string('a', 1001)));
     }
 
     [Fact]
-    public void EditProposal_WhenValid_UpdatesFields()
+    public void EditProposal_WithNullAmount_Throws()
     {
-      var proposal = Proposal.Create(1, 2, CreateValidMoney(), "Hello");
-      var before = proposal.UpdatedAt;
+        var proposal = CreateProposal();
+        Assert.Throws<ArgumentNullException>(() => proposal.EditProposal(null!, "Nova carta."));
+    }
 
-      Thread.Sleep(5);
-
-      proposal.EditProposal(CreateValidMoney(), "  New  ");
-
-      Assert.Equal("New", proposal.CoverLetter);
-      Assert.True(proposal.UpdatedAt > before);
+    [Theory]
+    [MemberData(nameof(NullOrWhitespaceCoverLetters))]
+    public void EditProposal_WithNullOrWhitespaceCoverLetter_Throws(string? coverLetter)
+    {
+        var proposal = CreateProposal();
+        Assert.Throws<ArgumentException>(() => proposal.EditProposal(new Money(200, "BRL"), coverLetter!));
     }
 
     [Fact]
-    public void EditAmount_WhenStatusNotSent_Throws()
+    public void EditProposal_WhenDifferent_UpdatesAndUpdatedAt()
     {
-      var proposal = Proposal.Create(1, 2, CreateValidMoney(), "Hello");
-      proposal.EditStatus(EProposalStatus.Rejected);
+        var proposal = CreateProposal();
+        var oldUpdatedAt = proposal.UpdatedAt;
 
-      Assert.Throws<InvalidOperationException>(() =>
-        proposal.EditAmount(CreateValidMoney()));
+        var newAmount = new Money(200, "BRL");
+        proposal.EditProposal(newAmount, "Nova carta de apresentação.");
+
+        Assert.Equal(newAmount, proposal.Amount);
+        Assert.Equal("Nova carta de apresentação.", proposal.CoverLetter);
+        Assert.True(proposal.UpdatedAt > oldUpdatedAt);
     }
 
     [Fact]
-    public void EditAmount_WhenValid_UpdatesAmount()
+    public void EditProposal_WhenSame_DoesNotUpdateUpdatedAt()
     {
-      var proposal = Proposal.Create(1, 2, CreateValidMoney(), "Hello");
-      var before = proposal.UpdatedAt;
+        var proposal = CreateProposal();
+        var oldUpdatedAt = proposal.UpdatedAt;
 
-      Thread.Sleep(100);
+        proposal.EditProposal(proposal.Amount, proposal.CoverLetter);
 
-      proposal.EditAmount(new Money(101));
+        Assert.Equal(oldUpdatedAt, proposal.UpdatedAt);
+    }
 
-      Assert.True(proposal.UpdatedAt > before);
+    public static IEnumerable<object[]> StatusesThatBlockEditing()
+    {
+        yield return new object[] { EProposalStatus.Accepted };
+        yield return new object[] { EProposalStatus.Rejected };
+    }
+
+    [Theory]
+    [MemberData(nameof(StatusesThatBlockEditing))]
+    public void EditProposal_WhenStatusIsNotSent_Throws(EProposalStatus status)
+    {
+        var proposal = CreateProposal();
+        proposal.EditStatus(status);
+
+        Assert.Throws<InvalidOperationException>(() => proposal.EditProposal(new Money(200, "BRL"), "Nova carta."));
+    }
+
+    [Theory]
+    [MemberData(nameof(StatusesThatBlockEditing))]
+    public void EditAmount_WhenStatusIsNotSent_Throws(EProposalStatus status)
+    {
+        var proposal = CreateProposal();
+        proposal.EditStatus(status);
+
+        Assert.Throws<InvalidOperationException>(() => proposal.EditAmount(new Money(200, "BRL")));
     }
 
     [Fact]
-    public void EditCoverLetter_WhenStatusNotSent_Throws()
+    public void EditAmount_WhenDifferent_UpdatesAmountAndUpdatedAt()
     {
-      var proposal = Proposal.Create(1, 2, CreateValidMoney(), "Hello");
-      proposal.EditStatus(EProposalStatus.Accepted);
+        var proposal = CreateProposal();
+        var oldUpdatedAt = proposal.UpdatedAt;
 
-      Assert.Throws<InvalidOperationException>(() =>
-        proposal.EditCoverLetter("New"));
+        var newAmount = new Money(500, "BRL");
+        proposal.EditAmount(newAmount);
+
+        Assert.Equal(newAmount, proposal.Amount);
+        Assert.True(proposal.UpdatedAt > oldUpdatedAt);
     }
 
     [Fact]
-    public void EditCoverLetter_WhenValid_TrimsAndUpdates()
+    public void EditAmount_WhenSame_DoesNotUpdateUpdatedAt()
     {
-      var proposal = Proposal.Create(1, 2, CreateValidMoney(), "Hello");
-      var before = proposal.UpdatedAt;
+        var proposal = CreateProposal();
+        var oldUpdatedAt = proposal.UpdatedAt;
 
-      Thread.Sleep(5);
+        proposal.EditAmount(proposal.Amount);
 
-      proposal.EditCoverLetter("  New  ");
+        Assert.Equal(oldUpdatedAt, proposal.UpdatedAt);
+    }
 
-      Assert.Equal("New", proposal.CoverLetter);
-      Assert.True(proposal.UpdatedAt > before);
+    [Theory]
+    [MemberData(nameof(StatusesThatBlockEditing))]
+    public void EditCoverLetter_WhenStatusIsNotSent_Throws(EProposalStatus status)
+    {
+        var proposal = CreateProposal();
+        proposal.EditStatus(status);
+
+        Assert.Throws<InvalidOperationException>(() => proposal.EditCoverLetter("Nova carta."));
     }
 
     [Fact]
-    public void EditStatus_FromSentToAccepted_ChangesStatus()
+    public void EditCoverLetter_WhenDifferent_UpdatesCoverLetterAndUpdatedAt()
     {
-      var proposal = Proposal.Create(1, 2, CreateValidMoney(), "Hello");
-      var before = proposal.UpdatedAt;
+        var proposal = CreateProposal();
+        var oldUpdatedAt = proposal.UpdatedAt;
 
-      Thread.Sleep(5);
+        proposal.EditCoverLetter("Nova carta de apresentação.");
 
-      proposal.EditStatus(EProposalStatus.Accepted);
-
-      Assert.Equal(EProposalStatus.Accepted, proposal.Status);
-      Assert.True(proposal.UpdatedAt > before);
+        Assert.Equal("Nova carta de apresentação.", proposal.CoverLetter);
+        Assert.True(proposal.UpdatedAt > oldUpdatedAt);
     }
 
     [Fact]
-    public void EditStatus_InvalidTransition_Throws()
+    public void EditCoverLetter_WhenSame_DoesNotUpdateUpdatedAt()
     {
-      var proposal = Proposal.Create(1, 2, CreateValidMoney(), "Hello");
-      proposal.EditStatus(EProposalStatus.Accepted);
+        var proposal = CreateProposal();
+        var oldUpdatedAt = proposal.UpdatedAt;
 
-      Assert.Throws<InvalidOperationException>(() =>
-        proposal.EditStatus(EProposalStatus.Rejected));
+        proposal.EditCoverLetter(proposal.CoverLetter);
+
+        Assert.Equal(oldUpdatedAt, proposal.UpdatedAt);
+    }
+
+    public static IEnumerable<object[]> ValidProposalStatusTransitions()
+    {
+        yield return new object[] { EProposalStatus.Sent, EProposalStatus.Accepted };
+        yield return new object[] { EProposalStatus.Sent, EProposalStatus.Rejected };
+    }
+
+    [Theory]
+    [MemberData(nameof(ValidProposalStatusTransitions))]
+    public void EditStatus_WithValidTransition_UpdatesStatusAndUpdatedAt(EProposalStatus from, EProposalStatus to)
+    {
+        var proposal = CreateProposal();
+        var oldUpdatedAt = proposal.UpdatedAt;
+
+        proposal.EditStatus(to);
+
+        Assert.Equal(to, proposal.Status);
+        Assert.True(proposal.UpdatedAt > oldUpdatedAt);
+    }
+
+    public static IEnumerable<object[]> InvalidProposalStatusTransitions()
+    {
+        yield return new object[] { EProposalStatus.Accepted, EProposalStatus.Sent };
+        yield return new object[] { EProposalStatus.Accepted, EProposalStatus.Rejected };
+        yield return new object[] { EProposalStatus.Rejected, EProposalStatus.Sent };
+        yield return new object[] { EProposalStatus.Rejected, EProposalStatus.Accepted };
+    }
+
+    [Theory]
+    [MemberData(nameof(InvalidProposalStatusTransitions))]
+    public void EditStatus_WithInvalidTransition_Throws(EProposalStatus from, EProposalStatus to)
+    {
+        var proposal = CreateProposal();
+        proposal.EditStatus(from);
+
+        Assert.Throws<InvalidOperationException>(() => proposal.EditStatus(to));
     }
 
     [Fact]
-    public void EditStatus_InvalidEnum_Throws()
+    public void EditStatus_WhenSame_DoesNotUpdateUpdatedAt()
     {
-      var proposal = Proposal.Create(1, 2, CreateValidMoney(), "Hello");
+        var proposal = CreateProposal();
+        var oldUpdatedAt = proposal.UpdatedAt;
 
-      var invalid = (EProposalStatus)999;
+        proposal.EditStatus(proposal.Status);
 
-      Assert.Throws<ArgumentOutOfRangeException>(() =>
-        proposal.EditStatus(invalid));
+        Assert.Equal(oldUpdatedAt, proposal.UpdatedAt);
     }
-  }
 }

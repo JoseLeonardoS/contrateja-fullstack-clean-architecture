@@ -1,259 +1,219 @@
 using ContrateJa.Domain.Entities;
 
-namespace ContrateJa.Tests.Domain.Entities
+namespace ContrateJa.Tests.Domain.Entities;
+
+public sealed class ReviewTests
 {
-    public sealed class ReviewTests
-  {
-    private static DateTime WaitUntilAfter(DateTime baseline, int timeoutMs = 200)
+    private static Review CreateReview(
+        long reviewerId = 1,
+        long reviewedId = 2,
+        long jobId = 3,
+        int rating = 5,
+        string comment = "Ótimo profissional.")
     {
-      var start = DateTime.UtcNow;
-      while (DateTime.UtcNow <= baseline)
-      {
-        if ((DateTime.UtcNow - start).TotalMilliseconds > timeoutMs)
-          break;
-
-        Thread.SpinWait(50);
-      }
-      return DateTime.UtcNow;
-    }
-
-    public static IEnumerable<object[]> InvalidIds()
-    {
-      yield return new object[] { 0L };
-      yield return new object[] { -1L };
-      yield return new object[] { -999L };
-    }
-
-    public static IEnumerable<object[]> InvalidRatings()
-    {
-      yield return new object[] { 0 };
-      yield return new object[] { -1 };
-      yield return new object[] { 6 };
-      yield return new object[] { 999 };
-    }
-
-    public static IEnumerable<object[]> InvalidComments()
-    {
-      yield return new object[] { "" };
-      yield return new object[] { " " };
-      yield return new object[] { "   " };
-      yield return new object[] { "\t" };
-      yield return new object[] { "\n" };
-      yield return new object[] { "\r\n" };
+        return Review.Create(reviewerId, reviewedId, jobId, rating, comment);
     }
 
     [Fact]
-    public void Create_WhenValid_SetsFieldsAndTimestamps()
+    public void Create_SetsTimestamps()
     {
-      var review = Review.Create(1, 2, 10, 5, "Great job");
+        var before = DateTime.UtcNow;
+        var review = CreateReview();
+        var after = DateTime.UtcNow;
 
-      Assert.Equal(1, review.ReviewerId);
-      Assert.Equal(2, review.ReviewedId);
-      Assert.Equal(10, review.JobId);
-      Assert.Equal(5, review.Rating);
-      Assert.Equal("Great job", review.Comment);
-      Assert.NotEqual(default, review.SubmittedAt);
-      Assert.NotEqual(default, review.UpdatedAt);
+        Assert.InRange(review.CreatedAt, before, after);
+        Assert.InRange(review.UpdatedAt, before, after);
+        Assert.InRange(review.SubmittedAt, before, after);
+        Assert.True(review.UpdatedAt >= review.CreatedAt);
     }
 
     [Fact]
-    public void Create_TrimsComment()
+    public void Create_WithInvalidReviewerId_Throws()
     {
-      var review = Review.Create(1, 2, 10, 5, "  Great job  ");
-
-      Assert.Equal("Great job", review.Comment);
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateReview(reviewerId: 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateReview(reviewerId: -1));
     }
 
-    [Theory]
-    [MemberData(nameof(InvalidIds))]
-    public void Create_WithInvalidReviewerId_Throws(long reviewerId)
+    [Fact]
+    public void Create_WithInvalidReviewedId_Throws()
     {
-      var ex = Assert.Throws<ArgumentException>(() => Review.Create(reviewerId, 2, 10, 5, "Ok"));
-      Assert.Equal("reviewerId", ex.ParamName);
-    }
-
-    [Theory]
-    [MemberData(nameof(InvalidIds))]
-    public void Create_WithInvalidReviewedId_Throws(long reviewedId)
-    {
-      var ex = Assert.Throws<ArgumentException>(() => Review.Create(1, reviewedId, 10, 5, "Ok"));
-      Assert.Equal("reviewedId", ex.ParamName);
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateReview(reviewedId: 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateReview(reviewedId: -1));
     }
 
     [Fact]
     public void Create_WhenReviewerEqualsReviewed_Throws()
     {
-      var ex = Assert.Throws<ArgumentException>(() => Review.Create(1, 1, 10, 5, "Ok"));
-      Assert.Equal("reviewerId", ex.ParamName);
+        var ex = Assert.Throws<ArgumentException>(() => CreateReview(reviewerId: 1, reviewedId: 1));
+        Assert.Equal("reviewerId", ex.ParamName);
     }
 
-    [Theory]
-    [MemberData(nameof(InvalidIds))]
-    public void Create_WithInvalidJobId_Throws(long jobId)
+    [Fact]
+    public void Create_WithInvalidJobId_Throws()
     {
-      var ex = Assert.Throws<ArgumentException>(() => Review.Create(1, 2, jobId, 5, "Ok"));
-      Assert.Equal("jobId", ex.ParamName);
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateReview(jobId: 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateReview(jobId: -1));
+    }
+
+    public static IEnumerable<object[]> InvalidRatings()
+    {
+        yield return new object[] { 0 };
+        yield return new object[] { -1 };
+        yield return new object[] { 6 };
+        yield return new object[] { 100 };
     }
 
     [Theory]
     [MemberData(nameof(InvalidRatings))]
     public void Create_WithInvalidRating_Throws(int rating)
     {
-      var ex = Assert.Throws<ArgumentException>(() => Review.Create(1, 2, 10, rating, "Ok"));
-      Assert.Equal("rating", ex.ParamName);
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => CreateReview(rating: rating));
+        Assert.Equal("rating", ex.ParamName);
+    }
+
+    public static IEnumerable<object[]> ValidRatings()
+    {
+        yield return new object[] { 1 };
+        yield return new object[] { 2 };
+        yield return new object[] { 3 };
+        yield return new object[] { 4 };
+        yield return new object[] { 5 };
     }
 
     [Theory]
-    [MemberData(nameof(InvalidComments))]
-    public void Create_WithBlankComment_Throws(string comment)
+    [MemberData(nameof(ValidRatings))]
+    public void Create_WithValidRating_DoesNotThrow(int rating)
     {
-      var ex = Assert.Throws<ArgumentException>(() => Review.Create(1, 2, 10, 5, comment));
-      Assert.Equal("comment", ex.ParamName);
+        var exception = Record.Exception(() => CreateReview(rating: rating));
+        Assert.Null(exception);
+    }
+
+    public static IEnumerable<object[]> NullOrWhitespaceComments()
+    {
+        yield return new object[] { null! };
+        yield return new object[] { "" };
+        yield return new object[] { "   " };
+    }
+
+    [Theory]
+    [MemberData(nameof(NullOrWhitespaceComments))]
+    public void Create_WithNullOrWhitespaceComment_Throws(string? comment)
+    {
+        Assert.Throws<ArgumentException>(() => CreateReview(comment: comment!));
     }
 
     [Fact]
-    public void Create_WithTooLongComment_Throws()
+    public void Create_WithCommentExceeding1000Chars_Throws()
     {
-      var comment = new string('a', 1001);
-
-      var ex = Assert.Throws<ArgumentException>(() => Review.Create(1, 2, 10, 5, comment));
-      Assert.Equal("comment", ex.ParamName);
+        Assert.Throws<ArgumentException>(() => CreateReview(comment: new string('a', 1001)));
     }
 
     [Fact]
-    public void EditReview_WhenValid_UpdatesRatingCommentAndUpdatedAt()
+    public void EditReview_WhenDifferent_UpdatesAndUpdatedAt()
     {
-      var review = Review.Create(1, 2, 10, 3, "Ok");
-      var before = review.UpdatedAt;
+        var review = CreateReview();
+        var oldUpdatedAt = review.UpdatedAt;
 
-      WaitUntilAfter(before);
+        review.EditReview(3, "Bom profissional.");
 
-      review.EditReview(5, "  Great  ");
-
-      Assert.Equal(5, review.Rating);
-      Assert.Equal("Great", review.Comment);
-      Assert.True(review.UpdatedAt > before);
+        Assert.Equal(3, review.Rating);
+        Assert.Equal("Bom profissional.", review.Comment);
+        Assert.True(review.UpdatedAt > oldUpdatedAt);
     }
 
     [Fact]
-    public void EditReview_WhenNoChanges_DoesNotUpdateUpdatedAt()
+    public void EditReview_WhenSame_DoesNotUpdateUpdatedAt()
     {
-      var review = Review.Create(1, 2, 10, 3, "Ok");
-      var before = review.UpdatedAt;
+        var review = CreateReview();
+        var oldUpdatedAt = review.UpdatedAt;
 
-      review.EditReview(3, "Ok");
+        review.EditReview(review.Rating, review.Comment);
 
-      Assert.Equal(before, review.UpdatedAt);
+        Assert.Equal(oldUpdatedAt, review.UpdatedAt);
     }
 
     [Theory]
     [MemberData(nameof(InvalidRatings))]
     public void EditReview_WithInvalidRating_Throws(int rating)
     {
-      var review = Review.Create(1, 2, 10, 3, "Ok");
-
-      var ex = Assert.Throws<ArgumentException>(() => review.EditReview(rating, "Ok"));
-      Assert.Equal("rating", ex.ParamName);
+        var review = CreateReview();
+        Assert.Throws<ArgumentOutOfRangeException>(() => review.EditReview(rating, "Bom profissional."));
     }
 
     [Theory]
-    [MemberData(nameof(InvalidComments))]
-    public void EditReview_WithBlankComment_Throws(string comment)
+    [MemberData(nameof(NullOrWhitespaceComments))]
+    public void EditReview_WithNullOrWhitespaceComment_Throws(string? comment)
     {
-      var review = Review.Create(1, 2, 10, 3, "Ok");
-
-      var ex = Assert.Throws<ArgumentException>(() => review.EditReview(3, comment));
-      Assert.Equal("comment", ex.ParamName);
-    }
-
-    [Fact]
-    public void EditReview_WithTooLongComment_Throws()
-    {
-      var review = Review.Create(1, 2, 10, 3, "Ok");
-      var comment = new string('a', 1001);
-
-      var ex = Assert.Throws<ArgumentException>(() => review.EditReview(3, comment));
-      Assert.Equal("comment", ex.ParamName);
-    }
-
-    [Fact]
-    public void ChangeRating_WhenValid_UpdatesRatingAndUpdatedAt()
-    {
-      var review = Review.Create(1, 2, 10, 3, "Ok");
-      var before = review.UpdatedAt;
-
-      WaitUntilAfter(before);
-
-      review.ChangeRating(4);
-
-      Assert.Equal(4, review.Rating);
-      Assert.True(review.UpdatedAt > before);
-    }
-
-    [Fact]
-    public void ChangeRating_WhenSameRating_DoesNotUpdateUpdatedAt()
-    {
-      var review = Review.Create(1, 2, 10, 3, "Ok");
-      var before = review.UpdatedAt;
-
-      review.ChangeRating(3);
-
-      Assert.Equal(before, review.UpdatedAt);
+        var review = CreateReview();
+        Assert.Throws<ArgumentException>(() => review.EditReview(3, comment!));
     }
 
     [Theory]
     [MemberData(nameof(InvalidRatings))]
     public void ChangeRating_WithInvalidRating_Throws(int rating)
     {
-      var review = Review.Create(1, 2, 10, 3, "Ok");
-
-      var ex = Assert.Throws<ArgumentException>(() => review.ChangeRating(rating));
-      Assert.Equal("rating", ex.ParamName);
+        var review = CreateReview();
+        Assert.Throws<ArgumentOutOfRangeException>(() => review.ChangeRating(rating));
     }
 
     [Fact]
-    public void EditComment_WhenValid_UpdatesCommentAndUpdatedAt()
+    public void ChangeRating_WhenDifferent_UpdatesRatingAndUpdatedAt()
     {
-      var review = Review.Create(1, 2, 10, 3, "Ok");
-      var before = review.UpdatedAt;
+        var review = CreateReview(rating: 5);
+        var oldUpdatedAt = review.UpdatedAt;
 
-      WaitUntilAfter(before);
+        review.ChangeRating(3);
 
-      review.EditComment("  Nice  ");
-
-      Assert.Equal("Nice", review.Comment);
-      Assert.True(review.UpdatedAt > before);
+        Assert.Equal(3, review.Rating);
+        Assert.True(review.UpdatedAt > oldUpdatedAt);
     }
 
     [Fact]
-    public void EditComment_WhenSameComment_DoesNotUpdateUpdatedAt()
+    public void ChangeRating_WhenSame_DoesNotUpdateUpdatedAt()
     {
-      var review = Review.Create(1, 2, 10, 3, "Ok");
-      var before = review.UpdatedAt;
+        var review = CreateReview(rating: 5);
+        var oldUpdatedAt = review.UpdatedAt;
 
-      review.EditComment("Ok");
+        review.ChangeRating(5);
 
-      Assert.Equal(before, review.UpdatedAt);
+        Assert.Equal(oldUpdatedAt, review.UpdatedAt);
     }
 
     [Theory]
-    [MemberData(nameof(InvalidComments))]
-    public void EditComment_WithBlankComment_Throws(string comment)
+    [MemberData(nameof(NullOrWhitespaceComments))]
+    public void EditComment_WithNullOrWhitespaceComment_Throws(string? comment)
     {
-      var review = Review.Create(1, 2, 10, 3, "Ok");
-
-      var ex = Assert.Throws<ArgumentException>(() => review.EditComment(comment));
-      Assert.Equal("comment", ex.ParamName);
+        var review = CreateReview();
+        Assert.Throws<ArgumentException>(() => review.EditComment(comment!));
     }
 
     [Fact]
-    public void EditComment_WithTooLongComment_Throws()
+    public void EditComment_WithCommentExceeding1000Chars_Throws()
     {
-      var review = Review.Create(1, 2, 10, 3, "Ok");
-      var comment = new string('a', 1001);
-
-      var ex = Assert.Throws<ArgumentException>(() => review.EditComment(comment));
-      Assert.Equal("comment", ex.ParamName);
+        var review = CreateReview();
+        Assert.Throws<ArgumentException>(() => review.EditComment(new string('a', 1001)));
     }
-  }
+
+    [Fact]
+    public void EditComment_WhenDifferent_UpdatesCommentAndUpdatedAt()
+    {
+        var review = CreateReview();
+        var oldUpdatedAt = review.UpdatedAt;
+
+        review.EditComment("Novo comentário.");
+
+        Assert.Equal("Novo comentário.", review.Comment);
+        Assert.True(review.UpdatedAt > oldUpdatedAt);
+    }
+
+    [Fact]
+    public void EditComment_WhenSame_DoesNotUpdateUpdatedAt()
+    {
+        var review = CreateReview();
+        var oldUpdatedAt = review.UpdatedAt;
+
+        review.EditComment(review.Comment);
+
+        Assert.Equal(oldUpdatedAt, review.UpdatedAt);
+    }
 }

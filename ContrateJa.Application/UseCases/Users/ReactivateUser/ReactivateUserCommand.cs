@@ -1,13 +1,9 @@
 namespace ContrateJa.Application.UseCases.Users.ReactivateUser;
 
-public class ReactivateUserCommand
+public sealed class ReactivateUserCommand
 {
     public long UserId { get; }
 
-    public TYPE Type { get; set; }
-
-    public ReactivateUserCommand()
-    {
-        
-    }
-} 
+    public ReactivateUserCommand(long userId)
+        => UserId  =  userId;
+}

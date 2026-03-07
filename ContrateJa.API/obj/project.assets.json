@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net10.0": {
+      "BCrypt.Net-Next/4.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/BCrypt.Net-Next.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/BCrypt.Net-Next.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.AspNetCore.OpenApi/10.0.0": {
         "type": "package",
         "dependencies": {
@@ -41,6 +54,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
+          "BCrypt.Net-Next": "4.1.0",
           "ContrateJa.Domain": "1.0.0"
         },
         "compile": {
@@ -76,6 +90,35 @@
     }
   },
   "libraries": {
+    "BCrypt.Net-Next/4.1.0": {
+      "sha512": "5YT3DKllmtkyW68PjURu/V1TOe4MKiByKwsRNVcfYE1S5KuFTeozdmKzyNzolKiQF391OXCaQtINvYT3j1ERzQ==",
+      "type": "package",
+      "path": "bcrypt.net-next/4.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "bcrypt.net-next.4.1.0.nupkg.sha512",
+        "bcrypt.net-next.nuspec",
+        "ico.png",
+        "lib/net10.0/BCrypt.Net-Next.dll",
+        "lib/net10.0/BCrypt.Net-Next.xml",
+        "lib/net20/BCrypt.Net-Next.dll",
+        "lib/net20/BCrypt.Net-Next.xml",
+        "lib/net35/BCrypt.Net-Next.dll",
+        "lib/net35/BCrypt.Net-Next.xml",
+        "lib/net462/BCrypt.Net-Next.dll",
+        "lib/net462/BCrypt.Net-Next.xml",
+        "lib/net472/BCrypt.Net-Next.dll",
+        "lib/net472/BCrypt.Net-Next.xml",
+        "lib/net48/BCrypt.Net-Next.dll",
+        "lib/net48/BCrypt.Net-Next.xml",
+        "lib/netstandard2.0/BCrypt.Net-Next.dll",
+        "lib/netstandard2.0/BCrypt.Net-Next.xml",
+        "lib/netstandard2.1/BCrypt.Net-Next.dll",
+        "lib/netstandard2.1/BCrypt.Net-Next.xml",
+        "readme.md"
+      ]
+    },
     "Microsoft.AspNetCore.OpenApi/10.0.0": {
       "sha512": "0aqIF1t+sA2T62LIeMtXGSiaV7keGQaJnvwwmu+htQdjCaKYARfXAeqp4nHH9y2etpilyZ/tnQzZg4Ilmo/c4Q==",
       "type": "package",
@@ -141,11 +184,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/jose/dev/backend/ContrateJa/ContrateJa.API/ContrateJa.API.csproj",
+      "projectUniqueName": "/home/jose/Projects/ContrateJa/ContrateJa.API/ContrateJa.API.csproj",
       "projectName": "ContrateJa.API",
-      "projectPath": "/home/jose/dev/backend/ContrateJa/ContrateJa.API/ContrateJa.API.csproj",
+      "projectPath": "/home/jose/Projects/ContrateJa/ContrateJa.API/ContrateJa.API.csproj",
       "packagesPath": "/home/jose/.nuget/packages/",
-      "outputPath": "/home/jose/dev/backend/ContrateJa/ContrateJa.API/obj/",
+      "outputPath": "/home/jose/Projects/ContrateJa/ContrateJa.API/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/jose/.nuget/NuGet/NuGet.Config"
@@ -154,18 +197,18 @@
         "net10.0"
       ],
       "sources": {
-        "/usr/lib/dotnet/library-packs": {},
+        "/var/run/host/usr/lib/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/home/jose/dev/backend/ContrateJa/ContrateJa.Application/ContrateJa.Application.csproj": {
-              "projectPath": "/home/jose/dev/backend/ContrateJa/ContrateJa.Application/ContrateJa.Application.csproj"
+            "/home/jose/Projects/ContrateJa/ContrateJa.Application/ContrateJa.Application.csproj": {
+              "projectPath": "/home/jose/Projects/ContrateJa/ContrateJa.Application/ContrateJa.Application.csproj"
             },
-            "/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj": {
-              "projectPath": "/home/jose/dev/backend/ContrateJa/ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj"
+            "/home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj": {
+              "projectPath": "/home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/ContrateJa.Infrastructure.csproj"
             }
           }
         }
@@ -210,7 +253,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/var/run/host/usr/lib/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

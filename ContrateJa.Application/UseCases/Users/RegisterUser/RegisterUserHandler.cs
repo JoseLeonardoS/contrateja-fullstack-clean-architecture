@@ -24,7 +24,7 @@ public sealed class RegisterUserHandler
     if (await _userRepository.ExistsByEmail(command.Email, ct))
       throw new InvalidOperationException("Email already exists.");
 
-    // TODO: Add rules to encrypt the password
+    // TODO: Add rules to encrypt the password  
 
     var user = User.Create(
       command.Name,
