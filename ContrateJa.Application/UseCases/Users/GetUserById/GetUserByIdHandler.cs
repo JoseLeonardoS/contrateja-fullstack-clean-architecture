@@ -1,40 +1,34 @@
+using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
-using ContrateJa.Application.DTOs;
+using ContrateJa.Application.UseCases.Users.Shared;
+using ContrateJa.Domain.Entities;
+using ContrateJa.Domain.Exceptions;
 
 namespace ContrateJa.Application.UseCases.Users.GetUserById;
 
-public sealed class GetUserByIdHandler
+public sealed class GetUserByIdHandler : IQueryHandler<GetUserByIdQuery, UserResponse>
 {
-  private readonly IUserRepository _userRepository;
+    private readonly IUserRepository _userRepository;
 
-  public GetUserByIdHandler(IUserRepository userRepository)
-    => _userRepository = userRepository;
+    public GetUserByIdHandler(IUserRepository userRepository)
+        => _userRepository = userRepository;
 
-  public async Task<UserDto> Execute(GetUserByIdQuery query, CancellationToken ct = default)
-  {
-    if (query is null)
-      throw new ArgumentNullException(nameof(query));
-
-    if (query.UserId <= 0)
-      throw new ArgumentOutOfRangeException(nameof(query.UserId));
-
-    var user = await _userRepository.GetById(query.UserId, ct);
-
-    if (user is null)
-      throw new InvalidOperationException("User not found.");
-
-    return new UserDto(
-      user.Name,
-      user.Phone,
-      user.Email,
-      user.AccountType,
-      user.IsAvailable,
-      user.Document,
-      user.State,
-      user.City,
-      user.Street,
-      user.ZipCode,
-      user.CreatedAt,
-      user.UpdatedAt);
-  }
+    public async Task<UserResponse> Execute(GetUserByIdQuery query, CancellationToken ct = default)
+    {
+        var user = await _userRepository.GetById(query.UserId, ct);
+        
+        if(user is null)
+            throw new NotFoundException(nameof(User),  query.UserId);
+        
+        return new UserResponse(
+            user.Id,
+            user.Name.FirstName,
+            user.Name.LastName,
+            user.Email.Address,
+            user.AccountType.ToString(),
+            user.IsAvailable,
+            user.State.Code,
+            user.City.Name,
+            user.CreatedAt);
+    }
 }

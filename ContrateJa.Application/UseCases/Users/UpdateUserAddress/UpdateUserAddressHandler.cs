@@ -1,46 +1,44 @@
+using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
+using ContrateJa.Domain.Entities;
+using ContrateJa.Domain.Exceptions;
+using ContrateJa.Domain.ValueObjects;
+using FluentValidation;
 
 namespace ContrateJa.Application.UseCases.Users.UpdateUserAddress;
 
-public sealed class UpdateUserAddressHandler
+public sealed class UpdateUserAddressHandler : ICommandHandler<UpdateUserAddressCommand>
 {
   private readonly IUserRepository _userRepository;
   private readonly IUnitOfWork _unitOfWork;
+  private readonly IValidator<UpdateUserAddressCommand> _validator;
 
   public UpdateUserAddressHandler(
     IUserRepository userRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IValidator<UpdateUserAddressCommand> validator)
   {
     _userRepository = userRepository;
     _unitOfWork = unitOfWork;
+    _validator = validator;
   }
 
 
   public async Task Execute(UpdateUserAddressCommand command, CancellationToken ct = default)
   {
-    if (command is null)
-      throw new ArgumentNullException(nameof(command));
-
-    if (command.UserId <= 0)
-      throw new ArgumentOutOfRangeException(nameof(command.UserId));
+    var result = await _validator.ValidateAsync(command, ct);
+    if(!result.IsValid)
+      throw new ValidationException(result.Errors);
 
     var user = await _userRepository.GetById(command.UserId, ct);
-
     if (user is null)
-      throw new InvalidOperationException("User not found.");
+      throw new NotFoundException(nameof(User), command.UserId);
 
-    if (command.NewState is null &&
-        command.NewCity is null &&
-        command.NewStreet is null &&
-        command.NewZipCode is null)
-      return;
-
-    var newState = command.NewState ?? user.State;
-    var newCity = command.NewCity ?? user.City;
-    var newStreet = command.NewStreet ?? user.Street;
-    var newZipCode = command.NewZipCode ?? user.ZipCode;
-
-    user.ChangeAddress(newState, newCity, newStreet, newZipCode);
+    user.ChangeAddress(
+      new State(command.NewState),
+      new City(command.NewCity),
+      new Street(command.NewStreet),
+      new ZipCode(command.NewZipCode));
 
     await _unitOfWork.SaveChanges(ct);
   }

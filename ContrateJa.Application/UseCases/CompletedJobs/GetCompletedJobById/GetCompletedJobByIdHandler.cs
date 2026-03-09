@@ -1,5 +1,4 @@
 using ContrateJa.Application.Abstractions.Repositories;
-using ContrateJa.Application.DTOs;
 
 namespace ContrateJa.Application.UseCases.CompletedJobs.GetCompletedJobById;
 
@@ -12,7 +11,7 @@ public sealed class GetCompletedJobByIdHandler
          _completedJobRepository = completedJobRepository;
     }
 
-    public async Task<CompletedJobDto> Execute(GetCompletedJobByIdQuery query, CancellationToken ct = default)
+    public async Task Execute(GetCompletedJobByIdQuery query, CancellationToken ct = default)
     {
         if (query.Id <= 0)
             throw new ArgumentOutOfRangeException(nameof(query.Id));
@@ -21,12 +20,5 @@ public sealed class GetCompletedJobByIdHandler
         
         if (completedJob == null)
             throw new InvalidOperationException("Completed job not found.");
-
-        return new CompletedJobDto(
-            completedJob.Id, 
-            completedJob.JobId, 
-            completedJob.FreelancerId, 
-            completedJob.ContractorId,
-            completedJob.CompletedAt);
     }
 }

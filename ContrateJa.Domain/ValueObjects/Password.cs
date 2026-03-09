@@ -4,7 +4,7 @@ namespace ContrateJa.Domain.ValueObjects
 {
     public sealed class Password
     {
-        private string Value { get; }
+        public string Value { get; }
 
         public Password(string value)
         {

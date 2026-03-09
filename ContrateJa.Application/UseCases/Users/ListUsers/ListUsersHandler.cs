@@ -1,32 +1,42 @@
+using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
-using ContrateJa.Application.DTOs;
+using ContrateJa.Application.UseCases.Users.Shared;
+using FluentValidation;
 
 namespace ContrateJa.Application.UseCases.Users.ListUsers;
 
-public sealed class ListUsersHandler
+public sealed class ListUsersHandler : IQueryHandler<ListUsersQuery, IReadOnlyList<UserResponse>>
 {
-  private readonly IUserRepository _userReposiroty;
+    private readonly IUserRepository _userRepository;
+    private readonly IValidator<ListUsersQuery> _validator;
 
-  public ListUsersHandler(IUserRepository userRepository)
-    => _userReposiroty = userRepository;
+    public ListUsersHandler(
+        IUserRepository userRepository,
+        IValidator<ListUsersQuery> validator)
+    {
+        _userRepository = userRepository;
+        _validator = validator;
+    }
 
-  public async Task<IReadOnlyList<UserDto>> Execute(CancellationToken ct = default)
-  {
-    var list = await _userReposiroty.ListAll(ct);
+    public async Task<IReadOnlyList<UserResponse>> Execute(ListUsersQuery query, CancellationToken ct = default)
+    {
+        var result = await _validator.ValidateAsync(query, ct);
 
-    return list.Select(u => new UserDto(
-      u.Name,
-      u.Phone,
-      u.Email,
-      u.AccountType,
-      u.IsAvailable,
-      u.Document,
-      u.State,
-      u.City,
-      u.Street,
-      u.ZipCode,
-      u.CreatedAt,
-      u.UpdatedAt))
-      .ToList();
-  }
+        if (!result.IsValid)
+            throw new ValidationException(result.Errors);
+
+        var users = await _userRepository.ListAll(query.Page, query.PageSize, ct);
+
+        return users.Select(user => new UserResponse(
+                user.Id,
+                user.Name.FirstName,
+                user.Name.LastName,
+                user.Email.Address,
+                user.AccountType.ToString(),
+                user.IsAvailable,
+                user.State.Code,
+                user.City.Name,
+                user.CreatedAt))
+            .ToList();
+    }
 }

@@ -1,45 +1,62 @@
+using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
+using ContrateJa.Application.Abstractions.Services;
 using ContrateJa.Domain.Entities;
+using ContrateJa.Domain.Enums;
+using ContrateJa.Domain.Exceptions;
+using ContrateJa.Domain.ValueObjects;
+using FluentValidation;
 
 namespace ContrateJa.Application.UseCases.Users.RegisterUser;
 
-public sealed class RegisterUserHandler
+public sealed class RegisterUserHandler : ICommandHandler<RegisterUserCommand>
 {
-  private readonly IUserRepository _userRepository;
-  private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IValidator<RegisterUserCommand> _validator;
+    private readonly IPasswordHasher _passwordHasher;
+    
+    public RegisterUserHandler(
+        IUserRepository userRepository, 
+        IUnitOfWork unitOfWork, 
+        IValidator<RegisterUserCommand> validator,
+        IPasswordHasher passwordHasher)
+    {
+        _userRepository = userRepository;
+        _unitOfWork = unitOfWork;
+        _validator = validator;
+        _passwordHasher = passwordHasher;
+    }
+    
+    public async Task Execute(RegisterUserCommand command, CancellationToken ct = default)
+    {
+        var result = await _validator.ValidateAsync(command, ct);
+        if (!result.IsValid)
+            throw new ValidationException(result.Errors);
+        
+        var emailExists = await _userRepository.ExistsByEmail(new Email(command.Email), ct);
+        if(emailExists) throw new ConflictException("Email address already exists.");
+        
+        var name = new Name(command.FirstName, command.LastName);
+        var password = new Password(command.Password);
+        var passwordHash = _passwordHasher.Hash(password.Value);
+        var countryCode = Enum.Parse<ECountryCode>(command.CountryCode);
+        var accountType = Enum.Parse<EAccountType>(command.AccountType);
 
-  public RegisterUserHandler(
-    IUserRepository userRepository,
-    IUnitOfWork unitOfWork)
-  {
-    _userRepository = userRepository;
-    _unitOfWork = unitOfWork;
-  }
+        var user = User.Create(
+            name,
+            new Phone(countryCode, command.Phone),
+            new Email(command.Email), 
+            new PasswordHash(passwordHash),
+            accountType,
+            command.IsAvailable,
+            new Document(command.Document),
+            new State(command.State),
+            new City(command.City),
+            new Street(command.Street),
+            new ZipCode(command.ZipCode)); 
 
-  public async Task Execute(RegisterUserCommand command, CancellationToken ct = default)
-  {
-    if (command is null)
-      throw new ArgumentNullException(nameof(command));
-
-    if (await _userRepository.ExistsByEmail(command.Email, ct))
-      throw new InvalidOperationException("Email already exists.");
-
-    // TODO: Add rules to encrypt the password  
-
-    var user = User.Create(
-      command.Name,
-      command.Phone,
-      command.Email,
-      command.PasswordHash,
-      command.AccountType,
-      command.IsAvailable,
-      command.Document,
-      command.State,
-      command.City,
-      command.Street,
-      command.ZipCode);
-
-    await _userRepository.Add(user, ct);
-    await _unitOfWork.SaveChanges(ct);
-  }
+        await _userRepository.Add(user, ct);
+        await _unitOfWork.SaveChanges(ct);
+    }
 }

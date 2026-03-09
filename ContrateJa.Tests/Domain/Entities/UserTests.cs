@@ -12,7 +12,7 @@ public sealed class UserTests
         Name? name = null,
         Phone? phone = null,
         Email? email = null,
-        Password? password = null,
+        PasswordHash? passwordHash = null,
         Document? document = null,
         State? state = null,
         City? city = null,
@@ -22,14 +22,14 @@ public sealed class UserTests
         name ??= new Name("Fulano", "de Tal");
         phone ??= new Phone(ECountryCode.BR, "81987654321");
         email ??= new Email("fulano.tal@example.test");
-        password ??= new Password("Aa1!aaaa");
+        passwordHash ??= new PasswordHash("$2a$11$validhashstring");
         document ??= new Document("52998224725");
         state ??= new State("SP");
         city ??= new City("São Paulo");
         street ??= new Street("Av. Exemplo");
         zipCode ??= new ZipCode("01001000");
 
-        return User.Create(name, phone, email, password, accountType, isAvailable, document, state, city, street, zipCode);
+        return User.Create(name, phone, email, passwordHash, accountType, isAvailable, document, state, city, street, zipCode);
     }
 
     public static IEnumerable<object[]> NullCreateArgs()
@@ -37,7 +37,7 @@ public sealed class UserTests
         yield return new object[] { "name" };
         yield return new object[] { "phone" };
         yield return new object[] { "email" };
-        yield return new object[] { "password" };
+        yield return new object[] { "passwordHash" };
         yield return new object[] { "document" };
         yield return new object[] { "state" };
         yield return new object[] { "city" };
@@ -52,7 +52,7 @@ public sealed class UserTests
         var name = new Name("Fulano", "de Tal");
         var phone = new Phone(ECountryCode.BR, "81987654321");
         var email = new Email("fulano.tal@example.test");
-        var password = new Password("Aa1!aaaa");
+        var passwordHash = new PasswordHash("$2a$11$validhashstring");
         var document = new Document("52998224725");
         var state = new State("SP");
         var city = new City("São Paulo");
@@ -61,15 +61,15 @@ public sealed class UserTests
 
         Action act = paramName switch
         {
-            "name" => () => User.Create(null!, phone, email, password, EAccountType.Freelancer, false, document, state, city, street, zipCode),
-            "phone" => () => User.Create(name, null!, email, password, EAccountType.Freelancer, false, document, state, city, street, zipCode),
-            "email" => () => User.Create(name, phone, null!, password, EAccountType.Freelancer, false, document, state, city, street, zipCode),
-            "password" => () => User.Create(name, phone, email, null!, EAccountType.Freelancer, false, document, state, city, street, zipCode),
-            "document" => () => User.Create(name, phone, email, password, EAccountType.Freelancer, false, null!, state, city, street, zipCode),
-            "state" => () => User.Create(name, phone, email, password, EAccountType.Freelancer, false, document, null!, city, street, zipCode),
-            "city" => () => User.Create(name, phone, email, password, EAccountType.Freelancer, false, document, state, null!, street, zipCode),
-            "street" => () => User.Create(name, phone, email, password, EAccountType.Freelancer, false, document, state, city, null!, zipCode),
-            "zipCode" => () => User.Create(name, phone, email, password, EAccountType.Freelancer, false, document, state, city, street, null!),
+            "name" => () => User.Create(null!, phone, email, passwordHash, EAccountType.Freelancer, false, document, state, city, street, zipCode),
+            "phone" => () => User.Create(name, null!, email, passwordHash, EAccountType.Freelancer, false, document, state, city, street, zipCode),
+            "email" => () => User.Create(name, phone, null!, passwordHash, EAccountType.Freelancer, false, document, state, city, street, zipCode),
+            "passwordHash" => () => User.Create(name, phone, email, null!, EAccountType.Freelancer, false, document, state, city, street, zipCode),
+            "document" => () => User.Create(name, phone, email, passwordHash, EAccountType.Freelancer, false, null!, state, city, street, zipCode),
+            "state" => () => User.Create(name, phone, email, passwordHash, EAccountType.Freelancer, false, document, null!, city, street, zipCode),
+            "city" => () => User.Create(name, phone, email, passwordHash, EAccountType.Freelancer, false, document, state, null!, street, zipCode),
+            "street" => () => User.Create(name, phone, email, passwordHash, EAccountType.Freelancer, false, document, state, city, null!, zipCode),
+            "zipCode" => () => User.Create(name, phone, email, passwordHash, EAccountType.Freelancer, false, document, state, city, street, null!),
             _ => throw new InvalidOperationException("Invalid test case.")
         };
 
@@ -206,15 +206,15 @@ public sealed class UserTests
     }
 
     [Fact]
-    public void ChangePassword_WhenCalled_UpdatesPasswordAndUpdatedAt()
+    public void ChangePassword_WhenCalled_UpdatesPasswordHashAndUpdatedAt()
     {
         var user = CreateUser();
         var oldUpdatedAt = user.UpdatedAt;
 
-        var newPassword = new Password("Bb2@bbbb");
-        user.ChangePassword(newPassword);
+        var newPasswordHash = new PasswordHash("$2a$11$newhashstring");
+        user.ChangePassword(newPasswordHash);
 
-        Assert.Equal(newPassword, user.Password);
+        Assert.Equal(newPasswordHash, user.PasswordHash);
         Assert.True(user.UpdatedAt > oldUpdatedAt);
     }
 

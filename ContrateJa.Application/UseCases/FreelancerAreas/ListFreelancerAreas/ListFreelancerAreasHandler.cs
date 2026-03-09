@@ -1,5 +1,4 @@
 using ContrateJa.Application.Abstractions.Repositories;
-using ContrateJa.Application.DTOs;
 
 namespace ContrateJa.Application.UseCases.FreelancerAreas.ListFreelancerAreas;
 
@@ -13,7 +12,7 @@ public sealed class ListFreelancerAreasHandler
         _freelancerAreaRepository = freelancerAreaRepository;
     }
 
-    public async Task<IReadOnlyList<FreelancerAreaDto>> Execute(
+    public async Task Execute(
         ListFreelancerAreasQuery query, 
         CancellationToken ct = default)
     {
@@ -25,12 +24,5 @@ public sealed class ListFreelancerAreasHandler
         
         var freelancerAreas = await _freelancerAreaRepository
             .ListByFreelancerId(query.FreelancerId, ct);
-        
-        return freelancerAreas
-            .Select(area => new FreelancerAreaDto(
-                area.Id,
-                area.FreelancerId,
-                area.Area))
-            .ToList();
     }
 }

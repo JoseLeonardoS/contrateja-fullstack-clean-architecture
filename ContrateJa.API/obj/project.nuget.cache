@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "+KjQCVReaGg=",
+  "dgSpecHash": "n7Hkra48NZs=",
   "success": true,
   "projectFilePath": "/home/jose/Projects/ContrateJa/ContrateJa.API/ContrateJa.API.csproj",
   "expectedPackageFiles": [
     "/home/jose/.nuget/packages/bcrypt.net-next/4.1.0/bcrypt.net-next.4.1.0.nupkg.sha512",
+    "/home/jose/.nuget/packages/fluentvalidation/12.1.1/fluentvalidation.12.1.1.nupkg.sha512",
+    "/home/jose/.nuget/packages/fluentvalidation.dependencyinjectionextensions/12.1.1/fluentvalidation.dependencyinjectionextensions.12.1.1.nupkg.sha512",
     "/home/jose/.nuget/packages/microsoft.aspnetcore.openapi/10.0.0/microsoft.aspnetcore.openapi.10.0.0.nupkg.sha512",
     "/home/jose/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512"
   ],

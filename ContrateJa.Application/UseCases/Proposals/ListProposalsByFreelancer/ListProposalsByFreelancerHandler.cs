@@ -1,5 +1,4 @@
 using ContrateJa.Application.Abstractions.Repositories;
-using ContrateJa.Application.DTOs;
 
 namespace ContrateJa.Application.UseCases.Proposals.ListProposalsByFreelancer;
 
@@ -10,7 +9,7 @@ public sealed class ListProposalsByFreelancerHandler
   public ListProposalsByFreelancerHandler(IProposalRepository proposalRepository)
     => _proposalRepository = proposalRepository;
 
-  public async Task<IReadOnlyList<ProposalDto>> Execute(ListProposalsByFreelancerQuery query, CancellationToken ct = default)
+  public async Task Execute(ListProposalsByFreelancerQuery query, CancellationToken ct = default)
   {
     if (query is null)
       throw new ArgumentNullException(nameof(query));
@@ -19,16 +18,5 @@ public sealed class ListProposalsByFreelancerHandler
       throw new ArgumentOutOfRangeException(nameof(query.FreelancerId));
 
     var list = await _proposalRepository.ListByFreelancerId(query.FreelancerId, ct);
-
-    return list.Select(proposal => new ProposalDto(
-      proposal.Id,
-      proposal.JobId,
-      proposal.FreelancerId,
-      proposal.Amount,
-      proposal.CoverLetter,
-      proposal.Status,
-      proposal.SubmittedAt,
-      proposal.UpdatedAt))
-      .ToList();
   }
 }

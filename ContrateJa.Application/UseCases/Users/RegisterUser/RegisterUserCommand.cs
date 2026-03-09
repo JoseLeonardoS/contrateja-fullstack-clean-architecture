@@ -1,41 +1,44 @@
-using ContrateJa.Domain.Enums;
-using ContrateJa.Domain.ValueObjects;
-
 namespace ContrateJa.Application.UseCases.Users.RegisterUser;
 
 public sealed class RegisterUserCommand
 {
 
-  public Name Name { get; }
-  public Phone Phone { get; }
-  public Email Email { get; }
-  public Password PasswordHash { get; }
-  public EAccountType AccountType { get; }
+  public string FirstName { get; }
+  public string LastName { get; }
+  public string Phone { get; }
+  public string CountryCode { get; }
+  public string Email { get; }
+  public string Password { get; }
+  public string AccountType { get; }
   public bool IsAvailable { get; }
-  public Document Document { get; }
-  public State State { get; }
-  public City City { get; }
-  public Street Street { get; }
-  public ZipCode ZipCode { get; }
+  public string Document { get; }
+  public string State { get; }
+  public string City { get; }
+  public string Street { get; }
+  public string ZipCode { get; }
 
 
   public RegisterUserCommand(
-    Name name,
-    Phone phone,
-    Email email,
-    Password passwordHash,
-    EAccountType accountType,
+    string firstName,
+    string lastName,
+    string phone,
+    string countryCode,
+    string email,
+    string password,
+    string accountType,
     bool isAvailable,
-    Document document,
-    State state,
-    City city,
-    Street street,
-    ZipCode zipCode)
+    string document,
+    string state,
+    string city,
+    string street,
+    string zipCode)
   {
-    Name = name;
+    FirstName = firstName;
+    LastName = lastName;
     Phone = phone;
+    CountryCode = countryCode;
     Email = email;
-    PasswordHash = passwordHash;
+    Password = password;
     AccountType = accountType;
     IsAvailable = isAvailable;
     Document = document;

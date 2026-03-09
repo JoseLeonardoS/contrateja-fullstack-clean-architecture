@@ -1,5 +1,4 @@
 using ContrateJa.Application.Abstractions.Repositories;
-using ContrateJa.Application.DTOs;
 
 namespace ContrateJa.Application.UseCases.Jobs.ListJobsByContractor;
 
@@ -13,7 +12,7 @@ public sealed class ListJobsByContractorHandler
         _jobRepository = jobRepository;
     }
 
-    public async Task<IReadOnlyList<JobDto>> Execute(
+    public async Task Execute(
         ListJobsByContractorQuery query, 
         CancellationToken ct = default)
     {
@@ -24,19 +23,5 @@ public sealed class ListJobsByContractorHandler
             throw new ArgumentOutOfRangeException(nameof(query.ContractorId));
 
         var list = await _jobRepository.ListByContractorId(query.ContractorId, ct);
-
-        return list.Select(job => new JobDto(
-                job.Id,
-                job.ContractorId,
-                job.Title,
-                job.Description,
-                job.State,
-                job.City,
-                job.Street,
-                job.ZipCode,
-                job.Status,
-                job.CreatedAt,
-                job.UpdatedAt))
-            .ToList();
     }
 }

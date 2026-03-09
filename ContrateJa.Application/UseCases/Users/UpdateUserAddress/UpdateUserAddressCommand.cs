@@ -1,23 +1,21 @@
-using ContrateJa.Domain.ValueObjects;
-
 namespace ContrateJa.Application.UseCases.Users.UpdateUserAddress;
 
 public sealed class UpdateUserAddressCommand
 {
   public long UserId { get; }
-  public State? NewState { get; }
-  public City? NewCity { get; }
-  public Street? NewStreet { get; }
-  public ZipCode? NewZipCode { get; }
+  public string NewState { get; }
+  public string NewCity { get; }
+  public string NewStreet { get; }
+  public string NewZipCode { get; }
 
   public UpdateUserAddressCommand(
     long userId,
-    State? newState = null,
-    City? newCity = null,
-    Street? newStreet = null,
-    ZipCode? newZipCode = null)
+    string newState,
+    string newCity,
+    string newStreet,
+    string newZipCode)
   {
-    UserId = userId;
+    UserId = userId > 0 ? userId : throw new ArgumentOutOfRangeException(nameof(userId));
     NewState = newState;
     NewCity = newCity;
     NewStreet = newStreet;

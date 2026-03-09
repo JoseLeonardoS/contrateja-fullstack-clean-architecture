@@ -1,11 +1,6 @@
-using ContrateJa.Domain.ValueObjects;
-
 namespace ContrateJa.Application.UseCases.Users.GetUserByEmail;
 
-public sealed class GetUserByEmailQuery
+public sealed class GetUserByEmailQuery(string email)
 {
-  public Email Email { get; }
-
-  public GetUserByEmailQuery(Email email)
-    => Email = email;
+    public string Email { get; } = email;
 }

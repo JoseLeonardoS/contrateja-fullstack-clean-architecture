@@ -9,7 +9,7 @@ public sealed class User : Entity
     public Name Name { get; private set; }
     public Phone Phone { get; private set; }
     public Email Email { get; private set; }
-    public Password Password { get; private set; }
+    public PasswordHash PasswordHash { get; private set; }
     public EAccountType AccountType { get; private set; }
     public bool IsAvailable { get; private set; }
     public Document Document { get; private set; }
@@ -24,7 +24,7 @@ public sealed class User : Entity
         Name name,
         Phone phone,
         Email email,
-        Password password,
+        PasswordHash passwordHash,
         EAccountType accountType,
         bool isAvailable,
         Document document,
@@ -36,7 +36,7 @@ public sealed class User : Entity
         Name = name;
         Phone = phone;
         Email = email;
-        Password = password;
+        PasswordHash = passwordHash;
         AccountType = accountType;
         IsAvailable = isAvailable;
         Document = document;
@@ -50,7 +50,7 @@ public sealed class User : Entity
         Name name,
         Phone phone,
         Email email,
-        Password password,
+        PasswordHash passwordHash,
         EAccountType accountType,
         bool isAvailable,
         Document document,
@@ -68,8 +68,8 @@ public sealed class User : Entity
         if (email is null)
             throw new ArgumentNullException(nameof(email));
 
-        if (password is null)
-            throw new ArgumentNullException(nameof(password));
+        if (passwordHash is null)
+            throw new ArgumentNullException(nameof(passwordHash));
 
         if (document is null)
             throw new ArgumentNullException(nameof(document));
@@ -89,7 +89,7 @@ public sealed class User : Entity
         if (isAvailable && !AllowsAvailability(accountType))
             isAvailable = false;
 
-        return new User(name, phone, email, password, accountType, isAvailable, document, state, city, street, zipCode);
+        return new User(name, phone, email, passwordHash, accountType, isAvailable, document, state, city, street, zipCode);
     }
 
     public void ChangeName(Name newName)
@@ -128,12 +128,12 @@ public sealed class User : Entity
         Touch();
     }
 
-    public void ChangePassword(Password newPassword)
+    public void ChangePassword(PasswordHash newPasswordHash)
     {
-        if (newPassword is null)
-            throw new ArgumentNullException(nameof(newPassword));
+        if (newPasswordHash is null)
+            throw new ArgumentNullException(nameof(newPasswordHash));
 
-        Password = newPassword;
+        PasswordHash = newPasswordHash;
         Touch();
     }
 

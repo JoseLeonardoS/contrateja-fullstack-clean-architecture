@@ -1,15 +1,15 @@
-using ContrateJa.Domain.ValueObjects;
-
 namespace ContrateJa.Application.UseCases.Users.UpdateUserName;
 
 public sealed class UpdateUserNameCommand
 {
   public long UserId { get; }
-  public Name NewName { get; }
+  public string FirstName { get; }
+  public string LastName { get; }
 
-  public UpdateUserNameCommand(long userId, Name newName)
+  public UpdateUserNameCommand(long userId, string firstName, string lastName)
   {
-    UserId = userId;
-    NewName = newName;
+    UserId = userId > 0 ? userId : throw new ArgumentOutOfRangeException(nameof(userId));
+    FirstName = firstName;
+    LastName = lastName;
   }
 }

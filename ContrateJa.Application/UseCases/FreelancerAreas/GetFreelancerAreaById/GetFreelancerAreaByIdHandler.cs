@@ -1,5 +1,4 @@
 using ContrateJa.Application.Abstractions.Repositories;
-using ContrateJa.Application.DTOs;
 
 namespace ContrateJa.Application.UseCases.FreelancerAreas.GetFreelancerAreaById;
 
@@ -12,7 +11,7 @@ public sealed class GetFreelancerAreaByIdHandler
         _freelancerAreaRepository = freelancerAreaRepository;
     }
 
-    public async Task<FreelancerAreaDto> Execute(GetFreelancerAreaByIdQuery query, CancellationToken ct = default)
+    public async Task Execute(GetFreelancerAreaByIdQuery query, CancellationToken ct = default)
     {
         if(query.Id <= 0)
             throw new ArgumentOutOfRangeException(nameof(query.Id));
@@ -21,10 +20,5 @@ public sealed class GetFreelancerAreaByIdHandler
 
         if (freelancerArea is null)
             throw new InvalidOperationException("Freelancer area not found.");
-
-        return new FreelancerAreaDto(
-            freelancerArea.Id, 
-            freelancerArea.FreelancerId, 
-            freelancerArea.Area);
     }
 }

@@ -1,5 +1,4 @@
 using ContrateJa.Application.Abstractions.Repositories;
-using ContrateJa.Application.DTOs;
 
 namespace ContrateJa.Application.UseCases.Reviews.GetReviewById;
 
@@ -10,7 +9,7 @@ public sealed class GetReviewByIdHandler
   public GetReviewByIdHandler(IReviewRepository reviewRepository)
     => _reviewRepository = reviewRepository;
 
-  public async Task<ReviewDto> Execute(GetReviewByIdQuery query, CancellationToken ct = default)
+  public async Task Execute(GetReviewByIdQuery query, CancellationToken ct = default)
   {
     if (query is null)
       throw new ArgumentNullException(nameof(query));
@@ -22,15 +21,5 @@ public sealed class GetReviewByIdHandler
 
     if (review is null)
       throw new InvalidOperationException("Review not found.");
-
-    return new ReviewDto(
-      review.Id,
-      review.ReviewerId,
-      review.ReviewedId,
-      review.JobId,
-      review.Rating,
-      review.Comment,
-      review.SubmittedAt,
-      review.UpdatedAt);
   }
 }

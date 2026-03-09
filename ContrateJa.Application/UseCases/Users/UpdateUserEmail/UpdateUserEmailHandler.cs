@@ -1,40 +1,46 @@
+using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
+using ContrateJa.Domain.Entities;
+using ContrateJa.Domain.Exceptions;
+using ContrateJa.Domain.ValueObjects;
+using FluentValidation;
 
 namespace ContrateJa.Application.UseCases.Users.UpdateUserEmail;
 
-public sealed class UpdateUserEmailHandler
+public sealed class UpdateUserEmailHandler : ICommandHandler<UpdateUserEmailCommand>
 {
   private readonly IUserRepository _userRepository;
   private readonly IUnitOfWork _unitOfWork;
+  private readonly IValidator<UpdateUserEmailCommand> _validator;
 
   public UpdateUserEmailHandler(
     IUserRepository userRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IValidator<UpdateUserEmailCommand> validator)
   {
     _userRepository = userRepository;
     _unitOfWork = unitOfWork;
+    _validator = validator;
   }
 
   public async Task Execute(UpdateUserEmailCommand command, CancellationToken ct = default)
   {
-    if (command is null)
-      throw new ArgumentNullException(nameof(command));
-
-    if (command.UserId <= 0)
-      throw new ArgumentOutOfRangeException(nameof(command.UserId));
+    var result =  await _validator.ValidateAsync(command, ct);
+    if (!result.IsValid)
+      throw new ValidationException(result.Errors);
 
     var user = await _userRepository.GetById(command.UserId, ct);
 
     if (user is null)
-      throw new InvalidOperationException("User not found.");
+      throw new NotFoundException(nameof(User), command.UserId);
 
-    if (user.Email.Equals(command.NewEmail))
-      return;
+    var newEmail = new Email(command.NewEmail);
+    
+    var emailExists = await _userRepository.ExistsByEmail(newEmail, ct);
+    if(emailExists)
+      throw new ConflictException("Email already exists.");
 
-    if (await _userRepository.ExistsByEmail(command.NewEmail, ct))
-      throw new InvalidOperationException("Email already in use.");
-
-    user.ChangeEmail(command.NewEmail);
+    user.ChangeEmail(newEmail);
 
     await _unitOfWork.SaveChanges(ct);
   }
