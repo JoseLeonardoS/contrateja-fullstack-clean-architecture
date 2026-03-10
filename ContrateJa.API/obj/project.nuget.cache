@@ -1,14 +1,18 @@
 {
   "version": 2,
-  "dgSpecHash": "n7Hkra48NZs=",
+  "dgSpecHash": "O2YYsJ9UTn4=",
   "success": true,
   "projectFilePath": "/home/jose/Projects/ContrateJa/ContrateJa.API/ContrateJa.API.csproj",
   "expectedPackageFiles": [
-    "/home/jose/.nuget/packages/bcrypt.net-next/4.1.0/bcrypt.net-next.4.1.0.nupkg.sha512",
     "/home/jose/.nuget/packages/fluentvalidation/12.1.1/fluentvalidation.12.1.1.nupkg.sha512",
     "/home/jose/.nuget/packages/fluentvalidation.dependencyinjectionextensions/12.1.1/fluentvalidation.dependencyinjectionextensions.12.1.1.nupkg.sha512",
     "/home/jose/.nuget/packages/microsoft.aspnetcore.openapi/10.0.0/microsoft.aspnetcore.openapi.10.0.0.nupkg.sha512",
-    "/home/jose/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512"
+    "/home/jose/.nuget/packages/microsoft.entityframeworkcore/10.0.0-preview.7.25380.108/microsoft.entityframeworkcore.10.0.0-preview.7.25380.108.nupkg.sha512",
+    "/home/jose/.nuget/packages/microsoft.entityframeworkcore.abstractions/10.0.0-preview.7.25380.108/microsoft.entityframeworkcore.abstractions.10.0.0-preview.7.25380.108.nupkg.sha512",
+    "/home/jose/.nuget/packages/microsoft.entityframeworkcore.relational/10.0.0-preview.7.25380.108/microsoft.entityframeworkcore.relational.10.0.0-preview.7.25380.108.nupkg.sha512",
+    "/home/jose/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512",
+    "/home/jose/.nuget/packages/npgsql/9.0.3/npgsql.9.0.3.nupkg.sha512",
+    "/home/jose/.nuget/packages/npgsql.entityframeworkcore.postgresql/10.0.0-preview.7/npgsql.entityframeworkcore.postgresql.10.0.0-preview.7.nupkg.sha512"
   ],
   "logs": []
 }
