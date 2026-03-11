@@ -711,6 +711,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
+          "ContrateJa.Application": "1.0.0",
           "ContrateJa.Domain": "1.0.0",
           "Microsoft.EntityFrameworkCore": "10.0.0-preview.7.25380.108",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.0-preview.7"

@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\ContrateJa.Application\ContrateJa.Application.csproj" />
     <ProjectReference Include="..\ContrateJa.Domain\ContrateJa.Domain.csproj" />
   </ItemGroup>
 
