@@ -30,3 +30,7 @@
 /home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/refint/ContrateJa.Infrastructure.dll
 /home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/ContrateJa.Infrastructure.pdb
 /home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/ref/ContrateJa.Infrastructure.dll
+/home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/bin/Debug/net10.0/ContrateJa.Infrastructure.runtimeconfig.json
+/home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/bin/Debug/net10.0/ContrateJa.Application.dll
+/home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/bin/Debug/net10.0/ContrateJa.Application.pdb
+/home/jose/Projects/ContrateJa/ContrateJa.Infrastructure/obj/Debug/net10.0/ContrateJa.Infrastructure.genruntimeconfig.cache
