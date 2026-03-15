@@ -10,6 +10,8 @@ namespace ContrateJa.Domain.ValueObjects
         ];
 
         public string Code { get; }
+        
+        private State() { }
 
         public State(string code)
         {

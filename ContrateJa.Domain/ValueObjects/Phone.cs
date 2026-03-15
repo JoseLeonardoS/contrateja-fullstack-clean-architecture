@@ -8,6 +8,8 @@ namespace ContrateJa.Domain.ValueObjects
     public ECountryCode CountryCode { get; }
     public string NationalNumber { get; }
     public string E164 { get; }
+    
+    private Phone() { }
 
     public Phone(ECountryCode countryCode, string nationalNumber)
     {

@@ -1,4 +1,5 @@
 using System.Text;
+using ContrateJa.API.Middlewares;
 using ContrateJa.Application;
 using ContrateJa.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -28,17 +29,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.MapControllers();
 app.Run();

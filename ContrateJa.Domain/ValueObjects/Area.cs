@@ -5,6 +5,8 @@ namespace ContrateJa.Domain.ValueObjects
     public State State { get; }
     public City City { get; }
 
+    private Area() { }
+
     public Area(State state, City city)
     {
       State = state ?? throw new ArgumentNullException(nameof(state));

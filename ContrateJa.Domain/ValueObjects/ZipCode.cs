@@ -5,6 +5,8 @@ namespace ContrateJa.Domain.ValueObjects
   public sealed class ZipCode : IEquatable<ZipCode>
   {
     public string Value { get; }
+    
+    private ZipCode() { }
 
     public ZipCode(string code)
     {

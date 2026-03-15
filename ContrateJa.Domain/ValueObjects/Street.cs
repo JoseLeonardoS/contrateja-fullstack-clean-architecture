@@ -5,6 +5,8 @@ namespace ContrateJa.Domain.ValueObjects
   public sealed class Street : IEquatable<Street>
   {
     public string Name { get; }
+    
+    private Street() { }
 
     public Street(string name)
     {

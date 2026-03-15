@@ -6,6 +6,8 @@ namespace ContrateJa.Domain.ValueObjects
   {
     public string Address { get; }
 
+    private Email() { }
+    
     public Email(string address)
     {
       if (string.IsNullOrWhiteSpace(address))

@@ -7,6 +7,8 @@ namespace ContrateJa.Domain.ValueObjects
     public string Value { get; }
     public EDocumentType Type { get; }
 
+    private Document() { }
+    
     public Document(string value)
     {
       if (string.IsNullOrWhiteSpace(value))
