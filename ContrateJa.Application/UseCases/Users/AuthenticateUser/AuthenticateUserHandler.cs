@@ -1,14 +1,14 @@
-using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
 using ContrateJa.Application.Abstractions.Services;
 using ContrateJa.Domain.Entities;
 using ContrateJa.Domain.Exceptions;
 using ContrateJa.Domain.ValueObjects;
 using FluentValidation;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Users.AuthenticateUser;
 
-public sealed class AuthenticateUserHandler : ICommandHandler<AuthenticateUserCommand, AuthenticateUserResponse>
+public sealed class AuthenticateUserHandler : IRequestHandler<AuthenticateUserCommand, AuthenticateUserResponse>
 {
     private readonly IUserRepository _userRepository;
     private readonly IValidator<AuthenticateUserCommand> _validator;
@@ -27,7 +27,7 @@ public sealed class AuthenticateUserHandler : ICommandHandler<AuthenticateUserCo
         _tokenGenerator = tokenGenerator;
     }
     
-    public async Task<AuthenticateUserResponse> Execute(AuthenticateUserCommand command, CancellationToken ct = default)
+    public async Task<AuthenticateUserResponse> Handle(AuthenticateUserCommand command, CancellationToken ct = default)
     {
         var result = await _validator.ValidateAsync(command, ct);
         if (!result.IsValid)

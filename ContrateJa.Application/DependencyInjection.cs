@@ -1,4 +1,3 @@
-using ContrateJa.Application.Abstractions;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,25 +9,7 @@ public static class DependencyInjection
     {
         var assembly = typeof(DependencyInjection).Assembly;
         services.AddValidatorsFromAssembly(assembly);
-        
-        services.Scan(scan => scan
-            .FromAssemblies(assembly)
-            .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)))
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
-
-        services.Scan(scan => scan
-            .FromAssemblies(assembly)
-            .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)))
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
-
-        services.Scan(scan => scan
-            .FromAssemblies(assembly)
-            .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)))
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
-        
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
         return services;
     }
 }

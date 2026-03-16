@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace ContrateJa.Application.UseCases.Users.UpdateUserPhone;
 
-public sealed class UpdateUserPhoneCommand
+public sealed class UpdateUserPhoneCommand : IRequest
 {
   public long UserId { get; }
   public string Phone { get; }

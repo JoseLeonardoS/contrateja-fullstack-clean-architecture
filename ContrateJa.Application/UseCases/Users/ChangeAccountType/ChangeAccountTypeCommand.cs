@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace ContrateJa.Application.UseCases.Users.ChangeAccountType;
 
-public sealed class ChangeAccountTypeCommand
+public sealed class ChangeAccountTypeCommand : IRequest
 {
     public long UserId { get; }
     public string NewAccountType { get; }

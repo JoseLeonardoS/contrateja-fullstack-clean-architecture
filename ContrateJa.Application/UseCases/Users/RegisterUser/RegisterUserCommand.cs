@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace ContrateJa.Application.UseCases.Users.RegisterUser;
 
-public sealed class RegisterUserCommand
+public sealed class RegisterUserCommand : IRequest
 {
 
   public string FirstName { get; }

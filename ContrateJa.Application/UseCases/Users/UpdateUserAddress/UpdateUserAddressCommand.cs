@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace ContrateJa.Application.UseCases.Users.UpdateUserAddress;
 
-public sealed class UpdateUserAddressCommand
+public sealed class UpdateUserAddressCommand : IRequest
 {
   public long UserId { get; }
   public string NewState { get; }

@@ -1,14 +1,14 @@
-using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
 using ContrateJa.Application.UseCases.Users.Shared;
 using ContrateJa.Domain.Entities;
 using ContrateJa.Domain.Exceptions;
 using ContrateJa.Domain.ValueObjects;
 using FluentValidation;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Users.GetUserByEmail;
 
-public sealed class GetUserByEmailHandler : IQueryHandler<GetUserByEmailQuery, UserResponse>
+public sealed class GetUserByEmailHandler : IRequestHandler<GetUserByEmailQuery, UserResponse>
 {
   private readonly IUserRepository _userRepository;
   private readonly IValidator<GetUserByEmailQuery> _validator;
@@ -21,7 +21,7 @@ public sealed class GetUserByEmailHandler : IQueryHandler<GetUserByEmailQuery, U
     _validator = validator;
   }
 
-  public async Task<UserResponse> Execute(GetUserByEmailQuery query, CancellationToken ct = default)
+  public async Task<UserResponse> Handle(GetUserByEmailQuery query, CancellationToken ct = default)
   {
     var result = await  _validator.ValidateAsync(query, ct);
     

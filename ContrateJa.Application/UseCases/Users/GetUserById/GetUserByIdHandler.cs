@@ -1,19 +1,19 @@
-using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
 using ContrateJa.Application.UseCases.Users.Shared;
 using ContrateJa.Domain.Entities;
 using ContrateJa.Domain.Exceptions;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Users.GetUserById;
 
-public sealed class GetUserByIdHandler : IQueryHandler<GetUserByIdQuery, UserResponse>
+public sealed class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, UserResponse>
 {
     private readonly IUserRepository _userRepository;
 
     public GetUserByIdHandler(IUserRepository userRepository)
         => _userRepository = userRepository;
 
-    public async Task<UserResponse> Execute(GetUserByIdQuery query, CancellationToken ct = default)
+    public async Task<UserResponse> Handle(GetUserByIdQuery query, CancellationToken ct = default)
     {
         var user = await _userRepository.GetById(query.UserId, ct);
         

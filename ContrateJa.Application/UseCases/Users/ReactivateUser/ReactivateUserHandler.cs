@@ -1,11 +1,11 @@
-using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
 using ContrateJa.Domain.Entities;
 using ContrateJa.Domain.Exceptions;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Users.ReactivateUser;
 
-public sealed class ReactivateUserHandler : ICommandHandler<ReactivateUserCommand>
+public sealed class ReactivateUserHandler : IRequestHandler<ReactivateUserCommand>
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -18,7 +18,7 @@ public sealed class ReactivateUserHandler : ICommandHandler<ReactivateUserComman
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Execute(ReactivateUserCommand command, CancellationToken ct = default)
+    public async Task Handle(ReactivateUserCommand command, CancellationToken ct = default)
     {
         var user = await _userRepository.GetById(command.UserId, ct);
         if(user is null)

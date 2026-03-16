@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace ContrateJa.Application.UseCases.Users.ChangePassword;
 
-public sealed class ChangePasswordCommand
+public sealed class ChangePasswordCommand : IRequest
 {
     public long UserId { get; }
     public string OldPassword { get; }

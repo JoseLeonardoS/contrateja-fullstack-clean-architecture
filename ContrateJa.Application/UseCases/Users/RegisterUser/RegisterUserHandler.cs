@@ -1,4 +1,3 @@
-using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
 using ContrateJa.Application.Abstractions.Services;
 using ContrateJa.Domain.Entities;
@@ -6,10 +5,11 @@ using ContrateJa.Domain.Enums;
 using ContrateJa.Domain.Exceptions;
 using ContrateJa.Domain.ValueObjects;
 using FluentValidation;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Users.RegisterUser;
 
-public sealed class RegisterUserHandler : ICommandHandler<RegisterUserCommand>
+public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand>
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -28,7 +28,7 @@ public sealed class RegisterUserHandler : ICommandHandler<RegisterUserCommand>
         _passwordHasher = passwordHasher;
     }
     
-    public async Task Execute(RegisterUserCommand command, CancellationToken ct = default)
+    public async Task Handle(RegisterUserCommand command, CancellationToken ct = default)
     {
         var result = await _validator.ValidateAsync(command, ct);
         if (!result.IsValid)
@@ -49,7 +49,7 @@ public sealed class RegisterUserHandler : ICommandHandler<RegisterUserCommand>
             new Email(command.Email), 
             new PasswordHash(passwordHash),
             accountType,
-            command.IsAvailable,
+            accountType != EAccountType.Contractor,
             new Document(command.Document),
             new State(command.State),
             new City(command.City),

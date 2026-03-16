@@ -1,11 +1,11 @@
-using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
 using ContrateJa.Application.UseCases.Users.Shared;
 using FluentValidation;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Users.ListUsers;
 
-public sealed class ListUsersHandler : IQueryHandler<ListUsersQuery, IReadOnlyList<UserResponse>>
+public sealed class ListUsersHandler : IRequestHandler<ListUsersQuery, IReadOnlyList<UserResponse>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IValidator<ListUsersQuery> _validator;
@@ -18,7 +18,7 @@ public sealed class ListUsersHandler : IQueryHandler<ListUsersQuery, IReadOnlyLi
         _validator = validator;
     }
 
-    public async Task<IReadOnlyList<UserResponse>> Execute(ListUsersQuery query, CancellationToken ct = default)
+    public async Task<IReadOnlyList<UserResponse>> Handle(ListUsersQuery query, CancellationToken ct = default)
     {
         var result = await _validator.ValidateAsync(query, ct);
 

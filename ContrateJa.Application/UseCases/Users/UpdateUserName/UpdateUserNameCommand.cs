@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace ContrateJa.Application.UseCases.Users.UpdateUserName;
 
-public sealed class UpdateUserNameCommand
+public sealed class UpdateUserNameCommand : IRequest
 {
   public long UserId { get; }
   public string FirstName { get; }

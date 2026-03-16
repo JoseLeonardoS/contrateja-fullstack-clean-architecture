@@ -9,6 +9,7 @@ public sealed class AppDbContext : DbContext
     : base(options) { }
     
     public DbSet<User>  Users { get; set; }
+    public DbSet<Job>  Jobs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

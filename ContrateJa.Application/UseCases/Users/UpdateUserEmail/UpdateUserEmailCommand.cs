@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace ContrateJa.Application.UseCases.Users.UpdateUserEmail;
 
-public sealed class UpdateUserEmailCommand
+public sealed class UpdateUserEmailCommand : IRequest
 {
   public long UserId { get; }
   public string NewEmail { get; }

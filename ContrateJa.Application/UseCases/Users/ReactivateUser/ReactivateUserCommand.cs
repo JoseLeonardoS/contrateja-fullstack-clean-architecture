@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace ContrateJa.Application.UseCases.Users.ReactivateUser;
 
-public sealed class ReactivateUserCommand
+public sealed class ReactivateUserCommand : IRequest
 {
     public long UserId { get; }
 

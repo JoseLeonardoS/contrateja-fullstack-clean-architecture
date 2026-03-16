@@ -1,13 +1,13 @@
-using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
 using ContrateJa.Domain.Entities;
 using ContrateJa.Domain.Exceptions;
 using ContrateJa.Domain.ValueObjects;
 using FluentValidation;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Users.UpdateUserName;
 
-public sealed class UpdateUserNameHandler : ICommandHandler<UpdateUserNameCommand>
+public sealed class UpdateUserNameHandler : IRequestHandler<UpdateUserNameCommand>
 {
   private readonly IUserRepository _userRepository;
   private readonly IUnitOfWork _unitOfWork;
@@ -23,7 +23,7 @@ public sealed class UpdateUserNameHandler : ICommandHandler<UpdateUserNameComman
     _validator = validator;
   }
 
-  public async Task Execute(UpdateUserNameCommand command, CancellationToken ct = default)
+  public async Task Handle(UpdateUserNameCommand command, CancellationToken ct = default)
   {
     var result = await _validator.ValidateAsync(command, ct);
     if (!result.IsValid)

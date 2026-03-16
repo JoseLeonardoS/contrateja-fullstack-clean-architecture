@@ -1,11 +1,11 @@
-using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
 using ContrateJa.Domain.Entities;
 using ContrateJa.Domain.Exceptions;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Users.DeleteUser;
 
-public sealed class DeleteUserHandler : ICommandHandler<DeleteUserCommand>
+public sealed class DeleteUserHandler : IRequestHandler<DeleteUserCommand>
 {
   private readonly IUserRepository _userRepository;
   private readonly IUnitOfWork _unitOfWork;
@@ -18,7 +18,7 @@ public sealed class DeleteUserHandler : ICommandHandler<DeleteUserCommand>
     _unitOfWork = unitOfWork;
   }
 
-  public async Task Execute(DeleteUserCommand command, CancellationToken ct = default)
+  public async Task Handle(DeleteUserCommand command, CancellationToken ct = default)
   {
     var user = await _userRepository.GetById(command.UserId, ct);
 

@@ -1,6 +1,9 @@
+using ContrateJa.Application.UseCases.Users.Shared;
+using MediatR;
+
 namespace ContrateJa.Application.UseCases.Users.ListUsers;
 
-public sealed class ListUsersQuery(int page, int pageSize)
+public sealed class ListUsersQuery(int page, int pageSize) : IRequest<IReadOnlyList<UserResponse>>
 {
     public int Page { get; } = page > 0
         ? page

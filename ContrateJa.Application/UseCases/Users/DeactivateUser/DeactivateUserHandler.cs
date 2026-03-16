@@ -1,11 +1,11 @@
-using ContrateJa.Application.Abstractions;
 using ContrateJa.Application.Abstractions.Repositories;
 using ContrateJa.Domain.Entities;
 using ContrateJa.Domain.Exceptions;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Users.DeactivateUser;
 
-public sealed class DeactivateUserHandler : ICommandHandler<DeactivateUserCommand>
+public sealed class DeactivateUserHandler : IRequestHandler<DeactivateUserCommand>
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -18,7 +18,7 @@ public sealed class DeactivateUserHandler : ICommandHandler<DeactivateUserComman
         _unitOfWork = unitOfWork;
     }
     
-    public async Task Execute(DeactivateUserCommand command, CancellationToken ct = default)
+    public async Task Handle(DeactivateUserCommand command, CancellationToken ct = default)
     {
         var user  = await _userRepository.GetById(command.UserId, ct);
         if (user is null)

@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace ContrateJa.Application.UseCases.Users.DeactivateUser;
 
-public sealed class DeactivateUserCommand
+public sealed class DeactivateUserCommand : IRequest
 {
     public long UserId { get; }
 
