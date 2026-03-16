@@ -1,34 +1,39 @@
 using ContrateJa.Application.Abstractions.Repositories;
+using ContrateJa.Domain.Entities;
+using ContrateJa.Domain.Enums;
+using ContrateJa.Domain.Exceptions;
+using FluentValidation;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Jobs.UpdateJobStatus;
 
-public sealed class UpdateJobStatusHandler
+public sealed class UpdateJobStatusHandler : IRequestHandler<UpdateJobStatusCommand>
 {
     private readonly IJobRepository _jobRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IValidator<UpdateJobStatusCommand> _validator;
 
     public UpdateJobStatusHandler(
         IJobRepository jobRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IValidator<UpdateJobStatusCommand> validator)
     {
         _jobRepository = jobRepository;
         _unitOfWork = unitOfWork;
+        _validator = validator;
     }
 
-    public async Task Execute(UpdateJobStatusCommand command, CancellationToken ct = default)
+    public async Task Handle(UpdateJobStatusCommand command, CancellationToken ct = default)
     {
-        if(command is null)
-            throw new ArgumentNullException(nameof(command));
-        
-        if(command.JobId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(command.JobId));
+        var result = await _validator.ValidateAsync(command, ct);
+        if (!result.IsValid)
+            throw new ValidationException(result.Errors);
         
         var job =  await _jobRepository.GetById(command.JobId, ct);
-        
         if(job is null)
-            throw new InvalidOperationException("Job not found.");
+            throw new NotFoundException(nameof(Job), command.JobId);
 
-        job.UpdateStatus(command.NewStatus);
+        job.UpdateStatus(Enum.Parse<EJobStatus>(command.NewStatus));
 
         await _unitOfWork.SaveChanges(ct);
     }

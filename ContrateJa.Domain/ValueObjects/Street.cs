@@ -15,7 +15,7 @@ namespace ContrateJa.Domain.ValueObjects
 
       name = name.Trim();
 
-      if (name.Length < 3 || name.Length > 150)
+      if (name.Length is < 3 or > 150)
         throw new ArgumentException("Invalid street name.", nameof(name));
 
       if (!ValidName.IsMatch(name))

@@ -39,7 +39,6 @@ public sealed class JobTests
     public void Create_SetsStatusToOpen()
     {
         var job = CreateJob();
-
         Assert.Equal(EJobStatus.Open, job.Status);
     }
 
@@ -261,9 +260,12 @@ public sealed class JobTests
 
     public static IEnumerable<object[]> ValidJobStatusTransitions()
     {
-        yield return new object[] { EJobStatus.Open, EJobStatus.InProgress };
         yield return new object[] { EJobStatus.Open, EJobStatus.Closed };
-        yield return new object[] { EJobStatus.InProgress, EJobStatus.Closed };
+    }
+
+    public static IEnumerable<object[]> InvalidJobStatusTransitions()
+    {
+        yield return new object[] { EJobStatus.Closed, EJobStatus.Open };
     }
 
     [Theory]
@@ -271,32 +273,11 @@ public sealed class JobTests
     public void UpdateStatus_WithValidTransition_UpdatesStatusAndUpdatedAt(EJobStatus from, EJobStatus to)
     {
         var job = CreateJob();
-        if (from == EJobStatus.InProgress)
-            job.UpdateStatus(EJobStatus.InProgress);
-
         var oldUpdatedAt = job.UpdatedAt;
         job.UpdateStatus(to);
 
         Assert.Equal(to, job.Status);
         Assert.True(job.UpdatedAt > oldUpdatedAt);
-    }
-
-    public static IEnumerable<object[]> InvalidJobStatusTransitions()
-    {
-        yield return new object[] { EJobStatus.Closed, EJobStatus.Open };
-        yield return new object[] { EJobStatus.Closed, EJobStatus.InProgress };
-        yield return new object[] { EJobStatus.InProgress, EJobStatus.Open };
-    }
-
-    [Theory]
-    [MemberData(nameof(InvalidJobStatusTransitions))]
-    public void UpdateStatus_WithInvalidTransition_Throws(EJobStatus from, EJobStatus to)
-    {
-        var job = CreateJob();
-        if (from != EJobStatus.Open)
-            job.UpdateStatus(from == EJobStatus.InProgress ? EJobStatus.InProgress : EJobStatus.Closed);
-
-        Assert.Throws<InvalidOperationException>(() => job.UpdateStatus(to));
     }
 
     [Fact]

@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace ContrateJa.Application.UseCases.Jobs.CloseJob;
 
-public sealed class CloseJobCommand
+public sealed class CloseJobCommand :  IRequest
 {
     public long JobId { get; }
 

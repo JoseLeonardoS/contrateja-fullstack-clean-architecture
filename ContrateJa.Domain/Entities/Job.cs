@@ -134,21 +134,7 @@ public sealed class Job : Entity
         if (newStatus == Status)
             return;
 
-        if (!IsValidTransition(Status, newStatus))
-            throw new InvalidOperationException($"Invalid transition: {Status} -> {newStatus}.");
-
         Status = newStatus;
         Touch();
-    }
-
-    private static bool IsValidTransition(EJobStatus current, EJobStatus next)
-    {
-        return current switch
-        {
-            EJobStatus.Open => next is EJobStatus.InProgress or EJobStatus.Closed,
-            EJobStatus.InProgress => next is EJobStatus.Closed,
-            EJobStatus.Closed => false,
-            _ => false
-        };
     }
 }

@@ -1,8 +1,9 @@
 using ContrateJa.Application.Abstractions.Repositories;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Jobs.DeleteJob;
 
-public sealed class DeleteJobHandler
+public sealed class DeleteJobHandler : IRequestHandler<DeleteJobCommand>
 {
     private readonly IJobRepository _jobRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -15,14 +16,8 @@ public sealed class DeleteJobHandler
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Execute(DeleteJobCommand command, CancellationToken ct = default)
+    public async Task Handle(DeleteJobCommand command, CancellationToken ct = default)
     {
-        if(command is null)
-            throw new ArgumentNullException(nameof(command));
-        
-        if(command.JobId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(command.JobId));
-        
         var job = await _jobRepository.GetById(command.JobId, ct);
         
         if(job is null)
