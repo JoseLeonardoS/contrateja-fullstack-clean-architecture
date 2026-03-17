@@ -1,34 +1,37 @@
 using ContrateJa.Application.Abstractions.Repositories;
+using ContrateJa.Domain.Exceptions;
+using FluentValidation;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Proposals.EditProposalCoverLetter;
 
-public sealed class EditProposalCoverLetterHandler
+public sealed class EditProposalCoverLetterHandler : IRequestHandler<EditProposalCoverLetterCommand>
 {
   private readonly IProposalRepository _proposalRepository;
   private readonly IUnitOfWork _unitOfWork;
+  private readonly IValidator<EditProposalCoverLetterCommand> _validator;
 
   public EditProposalCoverLetterHandler(
     IProposalRepository proposalRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IValidator<EditProposalCoverLetterCommand> validator)
   {
     _proposalRepository = proposalRepository;
     _unitOfWork = unitOfWork;
+    _validator = validator;
   }
 
-  public async Task Execute(EditProposalCoverLetterCommand command, CancellationToken ct = default)
+  public async Task Handle(EditProposalCoverLetterCommand command, CancellationToken ct = default)
   {
-    if (command is null)
-      throw new ArgumentNullException(nameof(command));
-
-    if (command.ProposalId <= 0)
-      throw new ArgumentOutOfRangeException(nameof(command.ProposalId));
+    var result = await _validator.ValidateAsync(command, ct);
+    if (!result.IsValid)
+      throw new ValidationException(result.Errors);
 
     var proposal = await _proposalRepository.GetById(command.ProposalId, ct);
-
     if (proposal is null)
-      throw new InvalidOperationException("Proposal not found.");
+      throw new NotFoundException(nameof(proposal), command.ProposalId);
 
-    proposal.EditCoverLetter(command.NewCoverLetter);
+    proposal.EditCoverLetter(command.CoverLetter);
 
     await _unitOfWork.SaveChanges(ct);
   }

@@ -8,18 +8,18 @@ public sealed class Proposal : Entity
 {
     public long JobId { get; private set; }
     public long FreelancerId { get; private set; }
-    public Money Amount { get; private set; }
+    public Money Money { get; private set; }
     public string CoverLetter { get; private set; }
     public EProposalStatus Status { get; private set; }
     public DateTime SubmittedAt { get; private set; }
 
     private Proposal() { }
 
-    private Proposal(long jobId, long freelancerId, Money amount, string coverLetter)
+    private Proposal(long jobId, long freelancerId, Money money, string coverLetter)
     {
         JobId = jobId;
         FreelancerId = freelancerId;
-        Amount = amount;
+        Money = money;
         CoverLetter = coverLetter;
         Status = EProposalStatus.Sent;
         SubmittedAt = DateTime.UtcNow;
@@ -51,10 +51,10 @@ public sealed class Proposal : Entity
 
         coverLetter = NormalizeAndValidateCoverLetter(coverLetter);
 
-        if (Equals(Amount, amount) && CoverLetter == coverLetter)
+        if (Equals(Money, amount) && CoverLetter == coverLetter)
             return;
 
-        Amount = amount;
+        Money = amount;
         CoverLetter = coverLetter;
         Touch();
     }
@@ -67,10 +67,10 @@ public sealed class Proposal : Entity
         if (amount is null)
             throw new ArgumentNullException(nameof(amount));
 
-        if (Equals(Amount, amount))
+        if (Equals(Money, amount))
             return;
 
-        Amount = amount;
+        Money = amount;
         Touch();
     }
 

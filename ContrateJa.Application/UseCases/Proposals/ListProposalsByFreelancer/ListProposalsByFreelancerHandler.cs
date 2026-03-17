@@ -1,22 +1,32 @@
 using ContrateJa.Application.Abstractions.Repositories;
+using ContrateJa.Application.UseCases.Proposals.Shared;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Proposals.ListProposalsByFreelancer;
 
-public sealed class ListProposalsByFreelancerHandler
+public sealed class ListProposalsByFreelancerHandler : IRequestHandler<ListProposalsByFreelancerQuery, IReadOnlyList<ProposalResponse>>
 {
   private readonly IProposalRepository _proposalRepository;
 
   public ListProposalsByFreelancerHandler(IProposalRepository proposalRepository)
     => _proposalRepository = proposalRepository;
 
-  public async Task Execute(ListProposalsByFreelancerQuery query, CancellationToken ct = default)
+  public async Task<IReadOnlyList<ProposalResponse>> Handle(ListProposalsByFreelancerQuery query, 
+    CancellationToken ct = default)
   {
-    if (query is null)
-      throw new ArgumentNullException(nameof(query));
-
-    if (query.FreelancerId <= 0)
-      throw new ArgumentOutOfRangeException(nameof(query.FreelancerId));
-
-    var list = await _proposalRepository.ListByFreelancerId(query.FreelancerId, ct);
+    var list = await _proposalRepository.GetAll(ct);
+    
+    return list.Select(proposal => new ProposalResponse(
+      proposal.Id,
+      proposal.JobId,
+      proposal.FreelancerId,
+      proposal.Money.Amount,
+      proposal.Money.Currency,
+      proposal.CoverLetter,
+      proposal.Status.ToString(),
+      proposal.CreatedAt,
+      proposal.UpdatedAt,
+      proposal.SubmittedAt))
+      .ToList();
   }
 }

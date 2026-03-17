@@ -1,15 +1,17 @@
-using ContrateJa.Domain.ValueObjects;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Proposals.EditProposalAmount;
 
-public sealed class EditProposalAmountCommand
+public sealed class EditProposalAmountCommand : IRequest
 {
   public long ProposalId { get; }
-  public Money NewAmount { get; }
+  public decimal Amount { get; }
+  public string Currency { get; }
 
-  public EditProposalAmountCommand(long proposalId, Money newAmount)
+  public EditProposalAmountCommand(long proposalId, decimal amount, string currency)
   {
-    ProposalId = proposalId;
-    NewAmount = newAmount;
+    ProposalId = proposalId > 0 ? proposalId : throw new ArgumentOutOfRangeException(nameof(proposalId));
+    Amount = amount;
+    Currency = currency;
   }
 }

@@ -1,34 +1,40 @@
 using ContrateJa.Application.Abstractions.Repositories;
+using ContrateJa.Domain.Entities;
+using ContrateJa.Domain.Exceptions;
+using ContrateJa.Domain.ValueObjects;
+using FluentValidation;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Proposals.EditProposalAmount;
 
-public sealed class EditProposalAmountHandler
+public sealed class EditProposalAmountHandler : IRequestHandler<EditProposalAmountCommand>
 {
   private readonly IProposalRepository _proposalRepository;
   private readonly IUnitOfWork _unitOfWork;
+  private readonly IValidator<EditProposalAmountCommand> _validator;
 
   public EditProposalAmountHandler(
     IProposalRepository proposalRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IValidator<EditProposalAmountCommand> validator)
   {
     _proposalRepository = proposalRepository;
     _unitOfWork = unitOfWork;
+    _validator = validator;
   }
 
-  public async Task Execute(EditProposalAmountCommand command, CancellationToken ct = default)
+  public async Task Handle(EditProposalAmountCommand command, CancellationToken ct = default)
   {
-    if (command is null)
-      throw new ArgumentNullException(nameof(command));
-
-    if (command.ProposalId <= 0)
-      throw new ArgumentOutOfRangeException(nameof(command.ProposalId));
+    var result = await _validator.ValidateAsync(command, ct);
+    if (!result.IsValid)
+      throw new ValidationException(result.Errors);
 
     var proposal = await _proposalRepository.GetById(command.ProposalId, ct);
 
     if (proposal is null)
-      throw new InvalidOperationException("Proposal not found.");
+      throw new NotFoundException(nameof(Proposal), command.ProposalId);
 
-    proposal.EditAmount(command.NewAmount);
+    proposal.EditAmount(new Money(command.Amount, command.Currency));
 
     await _unitOfWork.SaveChanges(ct);
   }

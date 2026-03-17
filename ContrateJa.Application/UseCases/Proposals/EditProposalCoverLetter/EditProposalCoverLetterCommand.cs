@@ -1,13 +1,15 @@
+using MediatR;
+
 namespace ContrateJa.Application.UseCases.Proposals.EditProposalCoverLetter;
 
-public sealed class EditProposalCoverLetterCommand
+public sealed class EditProposalCoverLetterCommand :  IRequest
 {
   public long ProposalId { get; }
-  public string NewCoverLetter { get; }
+  public string CoverLetter { get; }
 
-  public EditProposalCoverLetterCommand(long proposalId, string newCoverLetter)
+  public EditProposalCoverLetterCommand(long proposalId, string coverLetter)
   {
-    ProposalId = proposalId;
-    NewCoverLetter = newCoverLetter;
+    ProposalId = proposalId > 0 ? proposalId : throw new ArgumentOutOfRangeException(nameof(proposalId));
+    CoverLetter = coverLetter;
   }
 }

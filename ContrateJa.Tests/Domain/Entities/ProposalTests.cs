@@ -102,7 +102,7 @@ public sealed class ProposalTests
         var newAmount = new Money(200, "BRL");
         proposal.EditProposal(newAmount, "Nova carta de apresentação.");
 
-        Assert.Equal(newAmount, proposal.Amount);
+        Assert.Equal(newAmount, proposal.Money);
         Assert.Equal("Nova carta de apresentação.", proposal.CoverLetter);
         Assert.True(proposal.UpdatedAt > oldUpdatedAt);
     }
@@ -113,7 +113,7 @@ public sealed class ProposalTests
         var proposal = CreateProposal();
         var oldUpdatedAt = proposal.UpdatedAt;
 
-        proposal.EditProposal(proposal.Amount, proposal.CoverLetter);
+        proposal.EditProposal(proposal.Money, proposal.CoverLetter);
 
         Assert.Equal(oldUpdatedAt, proposal.UpdatedAt);
     }
@@ -153,7 +153,7 @@ public sealed class ProposalTests
         var newAmount = new Money(500, "BRL");
         proposal.EditAmount(newAmount);
 
-        Assert.Equal(newAmount, proposal.Amount);
+        Assert.Equal(newAmount, proposal.Money);
         Assert.True(proposal.UpdatedAt > oldUpdatedAt);
     }
 
@@ -163,7 +163,7 @@ public sealed class ProposalTests
         var proposal = CreateProposal();
         var oldUpdatedAt = proposal.UpdatedAt;
 
-        proposal.EditAmount(proposal.Amount);
+        proposal.EditAmount(proposal.Money);
 
         Assert.Equal(oldUpdatedAt, proposal.UpdatedAt);
     }
