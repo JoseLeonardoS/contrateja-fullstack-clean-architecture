@@ -1,34 +1,38 @@
 using ContrateJa.Application.Abstractions.Repositories;
+using ContrateJa.Domain.Entities;
+using ContrateJa.Domain.Exceptions;
+using FluentValidation;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Reviews.EditReview;
 
-public sealed class EditReviewHandler
+public sealed class EditReviewHandler : IRequestHandler<EditReviewCommand>
 {
   private readonly IReviewRepository _reviewRepository;
   private readonly IUnitOfWork _unitOfWork;
+  private readonly IValidator<EditReviewCommand> _validator;
 
   public EditReviewHandler(
     IReviewRepository reviewRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IValidator<EditReviewCommand> validator)
   {
     _reviewRepository = reviewRepository;
     _unitOfWork = unitOfWork;
+    _validator = validator;
   }
 
-  public async Task Execute(EditReviewCommand command, CancellationToken ct = default)
+  public async Task Handle(EditReviewCommand command, CancellationToken ct = default)
   {
-    if (command is null)
-      throw new ArgumentNullException(nameof(command));
-
-    if (command.ReviewId <= 0)
-      throw new ArgumentOutOfRangeException(nameof(command.ReviewId));
+    var result  = await _validator.ValidateAsync(command, ct);
+    if (!result.IsValid)
+      throw new ValidationException(result.Errors);
 
     var review = await _reviewRepository.GetById(command.ReviewId, ct);
-
     if (review is null)
-      throw new InvalidOperationException("Review not found.");
+      throw new NotFoundException(nameof(Review), command.ReviewId);
 
-    review.EditReview(command.NewRating, command.NewComment);
+    review.EditReview(command.Rating, command.Comment);
 
     await _unitOfWork.SaveChanges(ct);
   }

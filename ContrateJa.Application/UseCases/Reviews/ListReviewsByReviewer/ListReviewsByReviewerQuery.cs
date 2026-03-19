@@ -1,9 +1,13 @@
-namespace ContrateJa.Application.UseCases.Reviews.ListReviewsByReviewerUser;
+using ContrateJa.Application.UseCases.Shared;
+using MediatR;
 
-public sealed class ListReviewsByReviewerUserQuery
+namespace ContrateJa.Application.UseCases.Reviews.ListReviewsByReviewer;
+
+public sealed class ListReviewsByReviewerQuery : IRequest<IReadOnlyList<ReviewResponse>>
 {
   public long ReviewerId { get; }
 
-  public ListReviewsByReviewerUserQuery(long reviewerId)
-    => ReviewerId = reviewerId;
+  public ListReviewsByReviewerQuery(long reviewerId)
+    => ReviewerId = reviewerId > 0 ? reviewerId
+        : throw new ArgumentOutOfRangeException(nameof(reviewerId));
 }

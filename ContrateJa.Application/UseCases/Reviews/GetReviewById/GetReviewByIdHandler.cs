@@ -1,25 +1,34 @@
 using ContrateJa.Application.Abstractions.Repositories;
+using ContrateJa.Application.UseCases.Shared;
+using ContrateJa.Domain.Entities;
+using ContrateJa.Domain.Exceptions;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Reviews.GetReviewById;
 
-public sealed class GetReviewByIdHandler
+public sealed class GetReviewByIdHandler : IRequestHandler<GetReviewByIdQuery, ReviewResponse>
 {
   private readonly IReviewRepository _reviewRepository;
 
   public GetReviewByIdHandler(IReviewRepository reviewRepository)
     => _reviewRepository = reviewRepository;
 
-  public async Task Execute(GetReviewByIdQuery query, CancellationToken ct = default)
+  public async Task<ReviewResponse> Handle(GetReviewByIdQuery query, CancellationToken ct = default)
   {
-    if (query is null)
-      throw new ArgumentNullException(nameof(query));
-
-    if (query.Id <= 0)
-      throw new ArgumentOutOfRangeException(nameof(query.Id));
-
     var review = await _reviewRepository.GetById(query.Id, ct);
 
     if (review is null)
-      throw new InvalidOperationException("Review not found.");
+      throw new NotFoundException(nameof(Review), query.Id);
+
+    return new ReviewResponse(
+      review.Id,
+      review.ReviewerId,
+      review.ReviewedId,
+      review.JobId,
+      review.Rating,
+      review.Comment,
+      review.CreatedAt,
+      review.UpdatedAt,
+      review.SubmittedAt);
   }
 }

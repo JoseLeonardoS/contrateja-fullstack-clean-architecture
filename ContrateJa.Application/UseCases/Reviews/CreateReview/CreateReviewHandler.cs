@@ -1,25 +1,31 @@
 using ContrateJa.Application.Abstractions.Repositories;
 using ContrateJa.Domain.Entities;
+using FluentValidation;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.Reviews.CreateReview;
 
-public sealed class CreateReviewHandler
+public sealed class CreateReviewHandler : IRequestHandler<CreateReviewCommand>
 {
   private readonly IReviewRepository _reviewRepository;
   private readonly IUnitOfWork _unitOfWork;
+  private readonly IValidator<CreateReviewCommand> _validator;
 
   public CreateReviewHandler(
     IReviewRepository reviewRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IValidator<CreateReviewCommand> validator)
   {
     _reviewRepository = reviewRepository;
     _unitOfWork = unitOfWork;
+    _validator = validator;
   }
 
-  public async Task Execute(CreateReviewCommand command, CancellationToken ct = default)
+  public async Task Handle(CreateReviewCommand command, CancellationToken ct = default)
   {
-    if (command is null)
-      throw new ArgumentNullException(nameof(command));
+    var result  = await _validator.ValidateAsync(command, ct);
+    if (!result.IsValid)
+      throw new ValidationException(result.Errors);
 
     var review = Review.Create(
       command.ReviewerId,

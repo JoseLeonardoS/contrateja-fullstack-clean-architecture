@@ -1,13 +1,15 @@
+using MediatR;
+
 namespace ContrateJa.Application.UseCases.Reviews.EditReviewComment;
 
-public sealed class EditReviewCommentCommand
+public sealed class EditReviewCommentCommand : IRequest
 {
   public long ReviewId { get; }
-  public string NewComment { get; }
+  public string Comment { get; }
 
-  public EditReviewCommentCommand(long reviewId, string newComment)
+  public EditReviewCommentCommand(long reviewId, string comment)
   {
-    ReviewId = reviewId;
-    NewComment = newComment;
+    ReviewId = reviewId > 0 ? reviewId : throw new ArgumentOutOfRangeException(nameof(reviewId));
+    Comment = comment;
   }
 }
