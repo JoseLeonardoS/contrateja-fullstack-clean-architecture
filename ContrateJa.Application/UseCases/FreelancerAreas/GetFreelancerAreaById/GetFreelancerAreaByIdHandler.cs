@@ -1,24 +1,29 @@
 using ContrateJa.Application.Abstractions.Repositories;
+using ContrateJa.Application.UseCases.FreelancerAreas.Shared;
+using ContrateJa.Domain.Entities;
+using ContrateJa.Domain.Exceptions;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.FreelancerAreas.GetFreelancerAreaById;
 
-public sealed class GetFreelancerAreaByIdHandler
+public sealed class GetFreelancerAreaByIdHandler : IRequestHandler<GetFreelancerAreaByIdQuery, FreelancerAreaResponse>
 {
     private readonly IFreelancerAreaRepository _freelancerAreaRepository;
 
     public GetFreelancerAreaByIdHandler(IFreelancerAreaRepository freelancerAreaRepository)
-    {
-        _freelancerAreaRepository = freelancerAreaRepository;
-    }
+        => _freelancerAreaRepository = freelancerAreaRepository;
 
-    public async Task Execute(GetFreelancerAreaByIdQuery query, CancellationToken ct = default)
+    public async Task<FreelancerAreaResponse> Handle(GetFreelancerAreaByIdQuery query, CancellationToken ct = default)
     {
-        if(query.Id <= 0)
-            throw new ArgumentOutOfRangeException(nameof(query.Id));
-        
-        var freelancerArea = await _freelancerAreaRepository.GetById(query.Id, ct);
+        var area = await _freelancerAreaRepository.GetById(query.Id, ct);
+        if (area is null)
+            throw new NotFoundException(nameof(FreelancerArea), query.Id);
 
-        if (freelancerArea is null)
-            throw new InvalidOperationException("Freelancer area not found.");
+        return new FreelancerAreaResponse(
+            area.Id,
+            area.FreelancerId,
+            area.Area.State.Code,
+            area.Area.City.Name,
+            area.CreatedAt);
     }
 }

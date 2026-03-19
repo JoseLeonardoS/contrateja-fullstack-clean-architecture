@@ -12,6 +12,8 @@ public sealed class AppDbContext : DbContext
     public DbSet<Job>  Jobs { get; set; }
     public DbSet<Proposal>  Proposals { get; set; }
     public DbSet<Review>  Reviews { get; set; }
+    public DbSet<CompletedJob>  CompletedJobs { get; set; }
+    public DbSet<FreelancerArea>  FreelancerAreas { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

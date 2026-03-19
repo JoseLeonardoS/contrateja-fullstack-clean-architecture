@@ -1,28 +1,25 @@
 using ContrateJa.Application.Abstractions.Repositories;
+using ContrateJa.Application.UseCases.FreelancerAreas.Shared;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.FreelancerAreas.ListFreelancerAreas;
 
-public sealed class ListFreelancerAreasHandler
+public sealed class ListFreelancerAreasHandler : IRequestHandler<ListFreelancerAreasQuery, IReadOnlyList<FreelancerAreaResponse>>
 {
-    private  readonly IFreelancerAreaRepository _freelancerAreaRepository;
+    private readonly IFreelancerAreaRepository _freelancerAreaRepository;
 
-    public ListFreelancerAreasHandler(
-        IFreelancerAreaRepository freelancerAreaRepository)
-    {
-        _freelancerAreaRepository = freelancerAreaRepository;
-    }
+    public ListFreelancerAreasHandler(IFreelancerAreaRepository freelancerAreaRepository)
+        => _freelancerAreaRepository = freelancerAreaRepository;
 
-    public async Task Execute(
-        ListFreelancerAreasQuery query, 
-        CancellationToken ct = default)
+    public async Task<IReadOnlyList<FreelancerAreaResponse>> Handle(ListFreelancerAreasQuery query, CancellationToken ct = default)
     {
-        if(query is null)
-            throw new ArgumentNullException(nameof(query));
-        
-        if(query.FreelancerId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(query.FreelancerId));
-        
-        var freelancerAreas = await _freelancerAreaRepository
-            .ListByFreelancerId(query.FreelancerId, ct);
+        var list = await _freelancerAreaRepository.ListByFreelancerId(query.FreelancerId, ct);
+
+        return list.Select(x => new FreelancerAreaResponse(
+            x.Id,
+            x.FreelancerId,
+            x.Area.State.Code,
+            x.Area.City.Name,
+            x.CreatedAt)).ToList();
     }
 }

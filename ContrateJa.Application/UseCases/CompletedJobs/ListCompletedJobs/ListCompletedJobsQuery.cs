@@ -1,11 +1,6 @@
+using MediatR;
+using ContrateJa.Application.UseCases.CompletedJobs.Shared;
+
 namespace ContrateJa.Application.UseCases.CompletedJobs.ListCompletedJobs;
 
-public sealed class ListCompletedJobsQuery
-{
-    public long FreelancerId { get; }
-
-    public ListCompletedJobsQuery(long freelancerId)
-    {
-        FreelancerId = freelancerId;
-    }
-}
+public sealed class ListCompletedJobsQuery : IRequest<IReadOnlyList<CompletedJobResponse>>;

@@ -1,8 +1,11 @@
 using ContrateJa.Application.Abstractions.Repositories;
+using ContrateJa.Domain.Entities;
+using ContrateJa.Domain.Exceptions;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.FreelancerAreas.RemoveFreelancerArea;
 
-public sealed class RemoveFreelancerAreaHandler
+public sealed class RemoveFreelancerAreaHandler : IRequestHandler<RemoveFreelancerAreaCommand>
 {
     private readonly IFreelancerAreaRepository _freelancerAreaRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -15,20 +18,12 @@ public sealed class RemoveFreelancerAreaHandler
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Execute(
-        RemoveFreelancerAreaCommand command, 
+    public async Task Handle(RemoveFreelancerAreaCommand command, 
         CancellationToken ct = default)
     {
-        if(command is null)
-            throw new ArgumentNullException(nameof(command));
-        
-        if(command.FreelancerAreaId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(command.FreelancerAreaId));
-
         var freelancerArea = await _freelancerAreaRepository.GetById(command.FreelancerAreaId, ct);
-        
-        if(freelancerArea == null)
-            throw new InvalidOperationException("Freelancer area not found.");
+        if(freelancerArea is null)
+            throw new NotFoundException(nameof(FreelancerArea), command.FreelancerAreaId);
         
         await _freelancerAreaRepository.Remove(freelancerArea, ct);
         await _unitOfWork.SaveChanges(ct);

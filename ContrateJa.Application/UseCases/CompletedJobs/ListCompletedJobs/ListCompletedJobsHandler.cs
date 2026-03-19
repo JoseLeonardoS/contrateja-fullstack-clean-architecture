@@ -1,27 +1,26 @@
 using ContrateJa.Application.Abstractions.Repositories;
+using ContrateJa.Application.UseCases.CompletedJobs.Shared;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.CompletedJobs.ListCompletedJobs;
 
-public sealed class ListCompletedJobsHandler
+public sealed class ListCompletedJobsHandler : IRequestHandler<ListCompletedJobsQuery, IReadOnlyList<CompletedJobResponse>>
 {
     private readonly ICompletedJobRepository _completedJobRepository;
 
     public ListCompletedJobsHandler(ICompletedJobRepository completedJobRepository)
-    {
-        _completedJobRepository = completedJobRepository;
-    }
+        => _completedJobRepository = completedJobRepository;
 
-    public async Task Execute(
-        ListCompletedJobsQuery query,
-        CancellationToken ct = default)
+    public async Task<IReadOnlyList<CompletedJobResponse>> Handle(ListCompletedJobsQuery query, CancellationToken ct = default)
     {
-        if (query is null)
-            throw new ArgumentNullException(nameof(query));
+        var list = await _completedJobRepository.GetAll(ct);
 
-        if (query.FreelancerId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(query.FreelancerId));
-        
-        var completedJobs = await _completedJobRepository
-            .ListByFreelancerId(query.FreelancerId, ct);
+        return list.Select(x => new CompletedJobResponse(
+            x.Id,
+            x.JobId,
+            x.FreelancerId,
+            x.ContractorId,
+            x.CompletedAt,
+            x.CreatedAt)).ToList();
     }
 }

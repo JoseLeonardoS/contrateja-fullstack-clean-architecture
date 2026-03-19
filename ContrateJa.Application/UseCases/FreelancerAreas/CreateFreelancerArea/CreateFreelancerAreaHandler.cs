@@ -1,36 +1,40 @@
 using ContrateJa.Application.Abstractions.Repositories;
 using ContrateJa.Domain.Entities;
+using ContrateJa.Domain.Exceptions;
+using ContrateJa.Domain.ValueObjects;
+using FluentValidation;
+using MediatR;
 
 namespace ContrateJa.Application.UseCases.FreelancerAreas.CreateFreelancerArea;
 
-public sealed class CreateFreelancerAreaHandler
+public sealed class CreateFreelancerAreaHandler : IRequestHandler<CreateFreelancerAreaCommand>
 {
     private readonly IFreelancerAreaRepository _freelancerAreaRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IValidator<CreateFreelancerAreaCommand> _validator;
 
     public CreateFreelancerAreaHandler(
         IFreelancerAreaRepository freelancerAreaRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IValidator<CreateFreelancerAreaCommand> validator)
     {
         _freelancerAreaRepository = freelancerAreaRepository;
         _unitOfWork = unitOfWork;
+        _validator = validator;
     }
 
-    public async Task Execute(CreateFreelancerAreaCommand command, CancellationToken ct = default)
+    public async Task Handle(CreateFreelancerAreaCommand command, CancellationToken ct = default)
     {
-        if (command is null)
-            throw new ArgumentNullException(nameof(command));
-
-        if (command.FreelancerId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(command.FreelancerId));
-
-        if (command.Area is null)
-            throw new ArgumentNullException(nameof(command.Area));
-
-        if (await _freelancerAreaRepository.Exists(command.FreelancerId, command.Area, ct))
-            throw new InvalidOperationException("Freelancer area already exists.");
+        var result = await _validator.ValidateAsync(command, ct);
+        if (!result.IsValid)
+            throw new ValidationException(result.Errors);
         
-        var freelancerArea = FreelancerArea.Create(command.FreelancerId, command.Area);
+        var area = new Area(new State(command.State), new City(command.City));
+        
+        if (await _freelancerAreaRepository.Exists(command.FreelancerId, area, ct ))
+            throw new ConflictException("Freelancer area already exists.");
+        
+        var freelancerArea = FreelancerArea.Create(command.FreelancerId, area);
         
         await _freelancerAreaRepository.Add(freelancerArea, ct);
         await _unitOfWork.SaveChanges(ct);
