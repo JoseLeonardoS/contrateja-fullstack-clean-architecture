@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path="docker-compose.yml" />
+    <File Path="README.md" />
   </Folder>
   <Project Path="ContrateJa.API/ContrateJa.API.csproj" />
   <Project Path="ContrateJa.Application/ContrateJa.Application.csproj" />
