@@ -4,6 +4,7 @@ using ContrateJa.Application;
 using ContrateJa.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
+
+builder.Services.AddDataProtection()
+    .DisableAutomaticKeyGeneration();
 
 var app = builder.Build();
 
