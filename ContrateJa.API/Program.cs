@@ -1,10 +1,11 @@
-using System.Text;
 using ContrateJa.API.Middlewares;
 using ContrateJa.Application;
 using ContrateJa.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.IdentityModel.Tokens;
+using Scalar.AspNetCore;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer((document, context, ct) =>
+    {
+        document.Info = new()
+        {
+            Title = "ContrateJa API",
+            Version = "v1",
+            Description = "Plataforma de contratação de freelancers."
+        };
+        return Task.CompletedTask;
+    });
+});
+
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
@@ -42,6 +57,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
