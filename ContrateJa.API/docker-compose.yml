@@ -1,0 +1,24 @@
+﻿services:
+  db:
+    image: postgres:latest
+    container_name: contrateja-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: suasenha
+      POSTGRES_DB: contrateja
+    ports:
+      - "5432:5432"
+
+  api:
+    build:
+      context: .
+      dockerfile: ContrateJa.API/Dockerfile
+    container_name: contrateja-api
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=contrateja;Username=postgres;Password=1q2w3e4r"
+      Jwt__Secret: "xK9#mP2$vL5@nQ8&wR3^jY6*bT4!hF7%cA1+eG0-dN"
+      Jwt__ExpiresInMinutes: "60"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
