@@ -9,12 +9,14 @@ using ContrateJa.Application.UseCases.Proposals.ListProposalsByFreelancer;
 using ContrateJa.Application.UseCases.Proposals.ListProposalsByJob;
 using ContrateJa.Application.UseCases.Proposals.RejectProposal;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContrateJa.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public sealed class ProposalsController : ControllerBase
     {
         private readonly IMediator _mediator;

@@ -12,18 +12,20 @@ using ContrateJa.Application.UseCases.Users.UpdateUserEmail;
 using ContrateJa.Application.UseCases.Users.UpdateUserName;
 using ContrateJa.Application.UseCases.Users.UpdateUserPhone;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContrateJa.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public sealed class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;
 
         public UsersController(IMediator mediator)
-            => _mediator =  mediator;
+            => _mediator = mediator;
 
         [HttpGet]
         public async Task<IActionResult> ListUsers(int page, int pageSize, CancellationToken ct = default)
@@ -38,6 +40,7 @@ namespace ContrateJa.API.Controllers
             => Ok(await _mediator.Send(new GetUserByEmailQuery(email), ct));
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserCommand registerUser,
             CancellationToken ct = default)
         {
@@ -46,6 +49,7 @@ namespace ContrateJa.API.Controllers
         }
         
         [HttpPost("authenticate")]
+        [AllowAnonymous]
         public async Task<IActionResult> AuthenticateUser([FromBody] AuthenticateUserCommand authenticateUser,
             CancellationToken ct = default)
             => Ok(await _mediator.Send(authenticateUser, ct));

@@ -9,12 +9,14 @@ using ContrateJa.Application.UseCases.Jobs.UpdateJobDescription;
 using ContrateJa.Application.UseCases.Jobs.UpdateJobStatus;
 using ContrateJa.Application.UseCases.Jobs.UpdateJobTitle;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContrateJa.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public sealed class JobsController : ControllerBase
     {
         private readonly IMediator _mediator;

@@ -3,12 +3,14 @@ using ContrateJa.Application.UseCases.FreelancerAreas.GetFreelancerAreaById;
 using ContrateJa.Application.UseCases.FreelancerAreas.ListFreelancerAreas;
 using ContrateJa.Application.UseCases.FreelancerAreas.RemoveFreelancerArea;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContrateJa.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public sealed class FreelancerAreasController : ControllerBase
 {
     private readonly IMediator _mediator;

@@ -2,12 +2,14 @@ using ContrateJa.Application.UseCases.CompletedJobs.CompleteJob;
 using ContrateJa.Application.UseCases.CompletedJobs.GetCompletedJobById;
 using ContrateJa.Application.UseCases.CompletedJobs.ListCompletedJobs;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContrateJa.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public sealed class CompletedJobsController : ControllerBase
 {
     private readonly IMediator _mediator;
